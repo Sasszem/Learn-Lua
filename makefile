@@ -12,6 +12,8 @@ CFLAGS = `pkg-config --cflags gtk+-3.0`
 _LIBS=`pkg-config --libs $(LIBS)`
 
 build: $(foreach f, $(FILES),./src/$(f).c)
+	@make cleanup
+	-rm ./main
 	mkdir build
 	@make obj
 	@make link
@@ -23,16 +25,17 @@ link:
 	$(CC) $(OBJS) -o ./main $(_LIBS)
 	
 format:
-	$(foreach f, $(FILES), clang-format -style="{BasedOnStyle: llvm, IndentWidth: 4}" -i $(f).c;)
+	@make backup
+	$(foreach f, $(FILES), clang-format -style="{BasedOnStyle: llvm, IndentWidth: 4}" -i ./src/$(f).c;)
 
 backup:
-	rm ./bak/*.c
-	$(foreach f, $(FILES), cp $(f).c ./bak/;)
+	rm ./src/bak/*.c
+	$(foreach f, $(FILES), cp ./src/$(f).c ./src/bak/;)
 
 run:
 	@$(MAKE) build
 	./main
 
 cleanup:
-	@rm -r build
+	@rm -r build || true
 	

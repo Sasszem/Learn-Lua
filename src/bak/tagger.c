@@ -1,7 +1,7 @@
 // tagger.c
 #include "includes.h"
-#include "tagger.h"
 
+#include "tagger.h"
 
 char *FLOW = "do else elseif end for if repeat then until while\0";
 char *OPS = "and false not or true in\0";
@@ -9,8 +9,8 @@ char *FUNC = "break function return\0";
 char *OTHER = "local nil\0";
 
 // char kw_types[4][7]= {"FLOW\0","OPS\0","FUNC\0","OTHER\0"};
-char colors[6][8] = {"#CD7714\0", "#FFDA00\0", "#0079BD\0",
-                     "#A40030\0", "#45B430\0", "#3D3890\0"};
+char colors[7][8] = {"#CD7714\0", "#FFDA00\0", "#0079BD\0", "#A40030\0",
+                     "#45B430\0", "#3D3890\0", "#929292\0"};
 
 void make_tags() {
     for (int i = 0; i < 4; i++) {
@@ -22,7 +22,8 @@ void make_tags() {
 
     tags[5] =
         gtk_text_buffer_create_tag(buffer, NULL, "foreground", colors[5], NULL);
-
+    tags[6] =
+        gtk_text_buffer_create_tag(buffer, NULL, "foreground", colors[6], NULL);
     g_print("Tags created\n");
 }
 
@@ -60,15 +61,17 @@ void tag_comments(GtkTextTag *tag) {
     char *text = gtk_text_buffer_get_text(buffer, &start, &end, FALSE);
     int offset = 0;
     GtkTextIter tags, tage;
-    int state = 0; //0 if looking for start of comment('--'), 1 if looking for end of comment('\n')
+    int state = 0; // 0 if looking for start of comment('--'), 1 if looking for
+                   // end of comment('\n')
     while (*(text + offset) != '\0') {
 
-        if ((state == 0) && (text[offset] == '-') && (text[offset + 1] == '-')) {
+        if ((state == 0) && (text[offset] == '-') &&
+            (text[offset + 1] == '-')) {
             state = 1;
             gtk_text_buffer_get_iter_at_offset(buffer, &tags, offset);
 
-        }
-        else if (state == 1 && (text[offset] == '\n' || text[offset]=='\0')) {
+        } else if (state == 1 &&
+                   (text[offset] == '\n' || text[offset] == '\0')) {
             state = 0;
 
             gtk_text_buffer_get_iter_at_offset(buffer, &tage, offset);
@@ -77,11 +80,59 @@ void tag_comments(GtkTextTag *tag) {
         offset++;
     }
     if (state == 1) {
-            gtk_text_buffer_get_iter_at_offset(buffer, &tage, offset);
-            gtk_text_buffer_apply_tag(buffer, tag, &tags, &tage);
+        gtk_text_buffer_get_iter_at_offset(buffer, &tage, offset);
+        gtk_text_buffer_apply_tag(buffer, tag, &tags, &tage);
+    }
+}
+
+void tag_strings(GtkTextTag *tag, GtkTextTag *esc) {
+
+    GtkTextIter start, end;
+    gtk_text_buffer_get_bounds(buffer, &start, &end);
+    char *text = gtk_text_buffer_get_text(buffer, &start, &end, FALSE);
+    int offset = 0;
+    GtkTextIter strs, stre;
+    GtkTextIter escs, esce;
+    int state = 0; // 0 if looking for start of string("), 1 if looking for
+                   // end of comment(", but not \")
+    int escape = 0;
+    while (*(text + offset) != '\0') {
+
+        if ((state == 0) && (text[offset] == '"')) {
+            state = 1;
+            gtk_text_buffer_get_iter_at_offset(buffer, &strs, offset);
+
+        } else if (state == 1 &&
+                   (text[offset] == '"' & text[offset - 1] != '\\')) {
+
+            state = 0;
+            for (int i = 0; i<4; i++)
+    {
+            gtk_text_buffer_remove_tag(buffer, tags[i], &start, &end);
+    }
+            gtk_text_buffer_get_iter_at_offset(buffer, &stre, offset + 1);
+            gtk_text_buffer_apply_tag(buffer, tag, &strs, &stre);
+            
         }
 
+        if (state == 1) {
+            if (text[offset] == '\\' && escape == 0) {
+                escape = 1;
+                gtk_text_buffer_get_iter_at_offset(buffer, &escs, offset);
+            } else if (escape == 1) {
 
+                escape = 0;
+                gtk_text_buffer_get_iter_at_offset(buffer, &esce, offset+1);
+                gtk_text_buffer_apply_tag(buffer, esc, &escs, &esce);
+            }
+        }
+
+        offset++;
+    }
+    if (state == 1) {
+        gtk_text_buffer_get_iter_at_offset(buffer, &stre, offset);
+        gtk_text_buffer_apply_tag(buffer, tag, &strs, &stre);
+    }
 }
 
 void tag_kw_group(char *group, GtkTextTag *gtag) {
@@ -97,9 +148,16 @@ void tag_kw_group(char *group, GtkTextTag *gtag) {
 }
 
 void tag_keywords() {
+GtkTextIter start, end;
+    gtk_text_buffer_get_bounds(buffer, &start, &end);
+    for (int i = 0; i<6; i++)
+    {
+            gtk_text_buffer_remove_tag(buffer, tags[i], &start, &end);
+    }
     tag_kw_group(FLOW, tags[0]);
     tag_kw_group(OPS, tags[1]);
     tag_kw_group(FUNC, tags[2]);
     tag_kw_group(OTHER, tags[3]);
+    tag_strings(tags[4], tags[6]);
     tag_comments(tags[5]);
 }

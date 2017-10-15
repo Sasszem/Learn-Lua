@@ -68,9 +68,14 @@ static void activate(GtkApplication *app, gpointer user_data) {
     gtk_text_buffer_set_text(buffer, "Hello, this is some text", -1);
     tag = gtk_text_buffer_create_tag(buffer, "blue_foreground", "foreground",
                                      "#0000FF", "weight", 800, NULL);
+tag2 = gtk_text_buffer_create_tag(buffer, "red_foreground", "foreground",
+                                     "#FF0000", "weight", 800, NULL);
     gtk_text_buffer_get_iter_at_offset(buffer, &start, 7);
     gtk_text_buffer_get_iter_at_offset(buffer, &end, 12);
     gtk_text_buffer_apply_tag(buffer, tag, &start, &end);
+gtk_text_buffer_get_iter_at_offset(buffer, &start, 9);
+    gtk_text_buffer_get_iter_at_offset(buffer, &end, 10);
+    gtk_text_buffer_apply_tag(buffer, tag2, &start, &end);
     g_signal_connect(buffer, "changed", G_CALLBACK(retag), NULL);
 
     gtk_grid_attach(GTK_GRID(grid), view, 2, 1, 1, 1);

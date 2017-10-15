@@ -91,7 +91,7 @@ void tag_strings(GtkTextTag *tag, GtkTextTag *esc) {
     gtk_text_buffer_get_bounds(buffer, &start, &end);
     char *text = gtk_text_buffer_get_text(buffer, &start, &end, FALSE);
     int offset = 0;
-    GtkTextIter tags, tage;
+    GtkTextIter strs, stre;
     GtkTextIter escs, esce;
     int state = 0; // 0 if looking for start of string("), 1 if looking for
                    // end of comment(", but not \")
@@ -100,15 +100,18 @@ void tag_strings(GtkTextTag *tag, GtkTextTag *esc) {
 
         if ((state == 0) && (text[offset] == '"')) {
             state = 1;
-            gtk_text_buffer_get_iter_at_offset(buffer, &tags, offset);
+            gtk_text_buffer_get_iter_at_offset(buffer, &strs, offset);
 
         } else if (state == 1 &&
                    (text[offset] == '"' & text[offset - 1] != '\\')) {
 
             state = 0;
+            gtk_text_buffer_get_iter_at_offset(buffer, &stre, offset + 1);
+            for (int i = 0; i < 4; i++) {
+                gtk_text_buffer_remove_tag(buffer, tags[i], &strs, &stre);
+            }
 
-            gtk_text_buffer_get_iter_at_offset(buffer, &tage, offset + 1);
-            gtk_text_buffer_apply_tag(buffer, tag, &tags, &tage);
+            gtk_text_buffer_apply_tag(buffer, tag, &strs, &stre);
         }
 
         if (state == 1) {
@@ -118,7 +121,7 @@ void tag_strings(GtkTextTag *tag, GtkTextTag *esc) {
             } else if (escape == 1) {
 
                 escape = 0;
-                gtk_text_buffer_get_iter_at_offset(buffer, &esce, offset+1);
+                gtk_text_buffer_get_iter_at_offset(buffer, &esce, offset + 1);
                 gtk_text_buffer_apply_tag(buffer, esc, &escs, &esce);
             }
         }
@@ -126,8 +129,8 @@ void tag_strings(GtkTextTag *tag, GtkTextTag *esc) {
         offset++;
     }
     if (state == 1) {
-        gtk_text_buffer_get_iter_at_offset(buffer, &tage, offset);
-        gtk_text_buffer_apply_tag(buffer, tag, &tags, &tage);
+        gtk_text_buffer_get_iter_at_offset(buffer, &stre, offset);
+        gtk_text_buffer_apply_tag(buffer, tag, &strs, &stre);
     }
 }
 
@@ -144,11 +147,10 @@ void tag_kw_group(char *group, GtkTextTag *gtag) {
 }
 
 void tag_keywords() {
-GtkTextIter start, end;
+    GtkTextIter start, end;
     gtk_text_buffer_get_bounds(buffer, &start, &end);
-    for (int i = 0; i<7; i++)
-    {
-            gtk_text_buffer_remove_tag(buffer, tags[i], &start, &end);
+    for (int i = 0; i < 6; i++) {
+        gtk_text_buffer_remove_tag(buffer, tags[i], &start, &end);
     }
     tag_kw_group(FLOW, tags[0]);
     tag_kw_group(OPS, tags[1]);

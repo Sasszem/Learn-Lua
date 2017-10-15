@@ -5,50 +5,16 @@
 #include "tagger.h"
 const char tagged[4] = "end";
 
-/*static void retag() {
-    g_print("Starting retag\n");
-    gtk_text_buffer_get_bounds(buffer, &start, &end);
-    char *text = gtk_text_buffer_get_text(buffer, &start, &end, FALSE);
-    int offset = -3;
-    GtkTextIter tags, tage;
-    gtk_text_buffer_remove_tag(buffer, tag, &start, &end);
-    while (1) {
-        char *pos = g_strstr_len(text+offset+3, -1,tagged);
-        if (pos == NULL) {
-            g_print("substring not found :(\n");
-            g_free(pos);
-            break;
-        } else {
-            g_print("Found substr\n");
-            offset = pos - text;
-            g_print("offset: %d\n",offset);
 
-            gtk_text_buffer_get_iter_at_offset(buffer, &tags, offset);
-            gtk_text_buffer_get_iter_at_offset(buffer, &tage,
-                                               offset + sizeof(tagged));
-            gtk_text_buffer_apply_tag(buffer, tag, &tags, &tage);
-        }
+char *contents;
+int len;
+GError *error;
 
-    }
-    g_free(text);
-}*/
 
 static void retag(GtkWidget *w, gpointer data) {
-    g_print("Starting retag\n");
-    gtk_text_buffer_get_bounds(buffer, &start, &end);
-    gtk_text_buffer_remove_tag(buffer, tag, &start, &end);
-    // tag_kw("local",kw_tags[0]);
     tag_keywords();
     // tag_kw_group(FLOW,tag);
 }
-
-static void print_hello(GtkWidget *widget, gpointer data) {
-    gtk_text_buffer_get_bounds(buffer, &start, &end);
-    char *str = gtk_text_buffer_get_text(buffer, &start, &end, FALSE);
-    g_print("%s\n", str);
-    g_free(str);
-}
-
 static void activate(GtkApplication *app, gpointer user_data) {
 
     window = gtk_application_window_new(app);
@@ -65,22 +31,17 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(view));
     make_tags();
-    gtk_text_buffer_set_text(buffer, "Hello, this is some text", -1);
-    tag = gtk_text_buffer_create_tag(buffer, "blue_foreground", "foreground",
-                                     "#0000FF", "weight", 800, NULL);
-tag2 = gtk_text_buffer_create_tag(buffer, "red_foreground", "foreground",
-                                     "#FF0000", "weight", 800, NULL);
-    gtk_text_buffer_get_iter_at_offset(buffer, &start, 7);
-    gtk_text_buffer_get_iter_at_offset(buffer, &end, 12);
-    gtk_text_buffer_apply_tag(buffer, tag, &start, &end);
-gtk_text_buffer_get_iter_at_offset(buffer, &start, 9);
-    gtk_text_buffer_get_iter_at_offset(buffer, &end, 10);
-    gtk_text_buffer_apply_tag(buffer, tag2, &start, &end);
+    
+    g_file_get_contents("./test.lua",&contents,&len,&error);
+    g_print("File contetnts(%d bytes): \n%s",len,contents);
+    gtk_text_buffer_set_text(GTK_TEXT_BUFFER(buffer),contents,-1);
+    g_free(contents);
     g_signal_connect(buffer, "changed", G_CALLBACK(retag), NULL);
 
-    gtk_grid_attach(GTK_GRID(grid), view, 2, 1, 1, 1);
+gtk_grid_attach(GTK_GRID(grid), view, 2, 1, 1, 1);
+tag_keywords();
+
     button = gtk_button_new_with_label("Hello World");
-    g_signal_connect(button, "clicked", G_CALLBACK(print_hello), NULL);
 
     g_signal_connect_swapped(button, "clicked", G_CALLBACK(gtk_widget_destroy),
                              window);

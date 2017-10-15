@@ -1,51 +1,39 @@
-local case = { }
+--Test.lua for testing code highlighting funcionality
 
-function case.String(cfg, st, node)
-  local firstline, _ = getfirstline(node,true)
-  local lastline = getlastline(node)
-  for line=firstline+1, lastline do
-    st.indentation[line]=false
-  end
+if true then
+   print("true")
+elseif false
+print("false")
+else
+   print("???")
+   end
+
+while true do
+   print("Hello there")
 end
 
-function case.Table(cfg, st, node)
-
-  if not cfg.indenttable then
-    return
-  end
-
-  -- Format only inner values across several lines
-  local firstline, firstindex = getfirstline(node,true)
-  local lastline = getlastline(node)
-  if #node > 0 and firstline < lastline then
-
-    -- Determine first line to format
-    local firstnode = unpack(node)
-    local childfirstline, childfirstindex = getfirstline(firstnode)
-
-    -- Determine last line to format
-    local lastnode = #node == 1 and firstnode or node[ #node ]
-    local childlastline = getlastline(lastnode)
-
-    -- Actual formating
-    indent(cfg, st, childfirstline, childfirstindex, childlastline, node)
-  end
+for i,j in pairs({1:1,2:2}) do
+   print("i: "..tostring(i)..", j:"..tostring(j))
 end
 
---------------------------------------------------------------------------------
--- Statements formatters
---------------------------------------------------------------------------------
-function case.Call(cfg, st, node)
-  local expr, firstparam = unpack(node)
-  if firstparam then
-    indentparams(cfg, st, firstparam, node[#node], node)
-  end
+x=0
+
+repeat
+   print(x)
+   x=x+1
+until x==5 end
+
+print(1 and 2)
+print(1 or 2)
+print(not true)
+
+function foo()
+   return "bar"
+   break
 end
 
-function case.Do(cfg, st, node, parent)
-  -- Ignore empty node
-  if #node == 0 or not parent then
-    return
-  end
-  indentchunk(cfg, st, node, parent)
-end
+local n = nil
+
+print("Random escape seq inside a string: \n\0\a\b\\\"")
+--Comments are also highlighted until the end of the line
+
