@@ -60,7 +60,7 @@ void tag_comments(GtkTextTag *tag) {
     gtk_text_buffer_get_bounds(buffer, &start, &end);
     char *text = gtk_text_buffer_get_text(buffer, &start, &end, FALSE);
     int offset = 0;
-    GtkTextIter tags, tage;
+    GtkTextIter coms, come;
     int state = 0; // 0 if looking for start of comment('--'), 1 if looking for
                    // end of comment('\n')
     while (*(text + offset) != '\0') {
@@ -68,20 +68,30 @@ void tag_comments(GtkTextTag *tag) {
         if ((state == 0) && (text[offset] == '-') &&
             (text[offset + 1] == '-')) {
             state = 1;
-            gtk_text_buffer_get_iter_at_offset(buffer, &tags, offset);
+            gtk_text_buffer_get_iter_at_offset(buffer, &coms, offset);
 
         } else if (state == 1 &&
                    (text[offset] == '\n' || text[offset] == '\0')) {
             state = 0;
 
-            gtk_text_buffer_get_iter_at_offset(buffer, &tage, offset);
-            gtk_text_buffer_apply_tag(buffer, tag, &tags, &tage);
+            gtk_text_buffer_get_iter_at_offset(buffer, &come, offset);
+
+            for (int i = 0; i < 4; i++) {
+                gtk_text_buffer_remove_tag(buffer, tags[i], &coms, &come);
+            }
+
+            gtk_text_buffer_apply_tag(buffer, tag, &coms, &come);
         }
         offset++;
     }
     if (state == 1) {
-        gtk_text_buffer_get_iter_at_offset(buffer, &tage, offset);
-        gtk_text_buffer_apply_tag(buffer, tag, &tags, &tage);
+        gtk_text_buffer_get_iter_at_offset(buffer, &come, offset);
+
+        for (int i = 0; i < 4; i++) {
+            gtk_text_buffer_remove_tag(buffer, tags[i], &coms, &come);
+        }
+
+        gtk_text_buffer_apply_tag(buffer, tag, &coms, &come);
     }
 }
 
@@ -130,6 +140,10 @@ void tag_strings(GtkTextTag *tag, GtkTextTag *esc) {
     }
     if (state == 1) {
         gtk_text_buffer_get_iter_at_offset(buffer, &stre, offset);
+
+        for (int i = 0; i < 4; i++) {
+            gtk_text_buffer_remove_tag(buffer, tags[i], &strs, &stre);
+        }
         gtk_text_buffer_apply_tag(buffer, tag, &strs, &stre);
     }
 }

@@ -5,11 +5,9 @@
 #include "tagger.h"
 const char tagged[4] = "end";
 
-
 char *contents;
 int len;
 GError *error;
-
 
 static void retag(GtkWidget *w, gpointer data) {
     tag_keywords();
@@ -31,15 +29,15 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(view));
     make_tags();
-    
-    g_file_get_contents("./test.lua",&contents,&len,&error);
-    g_print("File contetnts(%d bytes): \n%s",len,contents);
-    gtk_text_buffer_set_text(GTK_TEXT_BUFFER(buffer),contents,-1);
+
+    g_file_get_contents("./test.lua", &contents, &len, &error);
+    g_print("File contetnts(%d bytes): \n%s", len, contents);
+    gtk_text_buffer_set_text(GTK_TEXT_BUFFER(buffer), contents, -1);
     g_free(contents);
     g_signal_connect(buffer, "changed", G_CALLBACK(retag), NULL);
 
-gtk_grid_attach(GTK_GRID(grid), view, 2, 1, 1, 1);
-tag_keywords();
+    gtk_grid_attach(GTK_GRID(grid), view, 2, 1, 1, 1);
+    tag_keywords();
 
     button = gtk_button_new_with_label("Hello World");
 
