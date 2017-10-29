@@ -1,7 +1,7 @@
 LIBS = gtk+-3.0
 
 
-FILES =main tagger
+FILES =main tagger data
 
 
 OBJS =$(foreach f, $(FILES),./build/$(f).o)

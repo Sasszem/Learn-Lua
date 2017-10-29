@@ -1,0 +1,47 @@
+#task Alapok
+#inst
+Üdvözöllek a Learn-Lua oktatóprogramban!
+Ez a program a Lua nyelv alapvető használatára fog megtanítani interaktív példákon keresztül
+A tanfolyam szekciókra, azon belül is feladatokra osztható
+Minden feladatban egy programot kell írnod, amely adatokat dolgoz fel.
+A programodat egy automatikus rendszer értékeli, amely különböző bemenő adatokkal teszteli a programod és ellenőrzi a válasz helyességét.
+Minden esetben látni fogsz néhány példaadatot, a hozzájuk tartozó helyes válasszal együtt.
+
+Pár szót a kezelőfelületről:
+A programodat a lenti szövegterületre írhatod
+A programodban a kulcsszavak és egyéb nyelvi elemek színessel ki lesznek emelve, ezzel is megkönnyítve a tájékozódást és a gépelési hibák felderítését
+
+A feladat példaadatai és az elvárt válaszok a fenti táblázatban olvashatóak.
+Ha elkészültél a programoddal, a Ctrl-R billentyűkombinációval vagy a lenti Run gombbal(zöld nyíl) futtathatod
+Ezen utasításokat a Ctrl-I billentyűkombinációval vagy a lenti Instructions gombbal(I betű) nézheted meg újra
+
+
+
+Informatikai tradíció, hogy a legelső program amit egy nyelv tanulása során megírunk a "Hello World!", egy egyszerű kiíratás - "Helló világ!"
+A mi első programunk is ez lesz
+
+A program egyetlen sorból áll:
+
+<span color="#1199ff">print("Hello World!")</span>
+
+Írd be a programot a programterületre és futtasd!
+#!inst
+
+#cases stdio
+function cases()
+case("","Hello World!")
+end
+#!cases
+#!task
+
+
+#task Print
+#inst
+Az előző példában láttuk, hogy a képernyőre való kiíratás a print utastással történik
+Jöjjön néhány további feladatat
+#!inst
+
+#cases stdio
+case("","Hello\nWorld\n8\n")
+#!cases
+#!task

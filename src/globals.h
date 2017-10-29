@@ -1,10 +1,16 @@
 //globals.h
 
+GtkApplication *app;
+
 GtkWidget *window;
-GtkWidget *button;
+GtkWidget *program_view, *inst_view;
+GtkTextBuffer *program_buffer, *inst_buffer;
+
 GtkWidget *grid;
-GtkWidget *view;
-GtkTextBuffer *buffer;
+GtkWidget *toolbar;
+GtkWidget *run_button;
+GIcon *run_icon;
+
 
 #define GTK_CSS_FILE_NAME "./style.css"
 

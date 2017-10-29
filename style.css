@@ -1,4 +1,15 @@
-textview {
-                                 font: 15 serif;
-                                   color: green;
-                                 }
+#btn {
+    font: 15 serif;
+    color: green;                                
+}
+
+#prg_view {
+    font: serif;
+    font-size: 14;
+    background-color:#001844;
+    color: #ffffff;
+}
+#prg_view:selected
+{
+    background-color: #0071d5;
+}
