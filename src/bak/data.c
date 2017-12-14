@@ -5,20 +5,17 @@
 #include "globals.h"
 
 #include "data.h"
-   /* void free_task(struct Task task) {
-        g_free(task.name);
-        g_free(task.inst);
-        g_free(task.cases);
-    }*/
+/* void free_task(struct Task task) {
+     g_free(task.name);
+     g_free(task.inst);
+     g_free(task.cases);
+ }*/
 void load_file(char *name) {
-    g_file_get_contents(name, &file, &len, NULL);
-    g_print("File: %i\n",g_utf8_validate (file, len, NULL));
+    g_file_get_contents(name, &file, NULL, NULL);
 
-
-    //load_task();
-    num_tasks=0;
+    // load_task();
+    num_tasks = 0;
 }
-
 
 int cmpstr(char *str, char *pattern, int len) {
     if (len == -1)
@@ -30,40 +27,40 @@ int cmpstr(char *str, char *pattern, int len) {
     return 1;
 }
 
-void null_str(char * str, int len)
-{
-for(;len!=0;len--)
-{
-str[len-1]=0;
-}
+void null_str(char *str, int len) {
+    for (; len != 0; len--) {
+        str[len - 1] = 0;
+    }
 }
 
 void load_task() {
 
     struct Task task;
-    task.l_tags=0;
     char state = 'N';
     char *ptr;
-    // States: Nothing, Task, Instructions, Code, caSes
+    // States: Nothing, Task, Instructions, Popup, caSes
     g_print("Begin loading task...\n");
     for (char *p = strtok(file, "\n"); p != NULL; p = strtok(NULL, "\n")) {
-        //g_print("Line: %s\n",p);
+        g_print("[%c]Line: %s\n", state, p);
         switch (state) {
 
         case 'N':
-                    g_print("State %c\n",state);
+            g_print("State %c\n", state);
             if (cmpstr(p, "#task", -1)) {
 
-                null_str(task.name,64);
-                null_str(task.inst,8192);
-                null_str(task.cases,4096);
+                null_str(task.name, 64);
+                null_str(task.inst, 8192);
+                null_str(task.cases, 4096);
 
-                stpcpy(task.name, p+6);
+                //null_str(task.popup_titles, 128);
+                //null_str(task.popup_texts, 8192);
+                //task.popup_count = 0;
+                stpcpy(task.name, p + 6);
                 state = 'T';
             }
             break;
         case 'T':
-            //g_print("State %c\n",state);
+            // g_print("State %c\n",state);
             if (cmpstr(p, "#inst", -1)) {
                 state = 'I';
                 ptr = task.inst;
@@ -72,73 +69,75 @@ void load_task() {
                 state = 'C';
                 ptr = task.cases;
             }
+            /*if (cmpstr(p, "#popup", -1)) {
+                g_print("Entering state 'P'\n");
+                state = 'P';
+
+                ptr = task.popup_texts + task.popup_count;
+                g_print("ptr set: %d\n", ptr);
+                g_print("Popup count: %d\n", task.popup_count);
+                g_print("title should be: %s\n", p + 7);
+                g_print("Title adr: %d\n",
+                        task.popup_titles + task.popup_count);
+                g_print("Prev. title: %s\n",
+                        task.popup_titles + (task.popup_count - 1));
+                stpcpy(task.popup_titles + task.popup_count, p + 7);
+                g_print("Popup title: %s\n",
+                        task.popup_titles[task.popup_count]);
+            }*/
             if (cmpstr(p, "#!task", -1)) {
-                
 
                 g_print("Task name: %s\nText:%s\nCode:%s\n", task.name,
                         task.inst, task.cases);
-                        //g_print("INST: %d\n",g_utf8_validate (task.inst, -1, NULL));
-    tasks[num_tasks]=task;
-    num_tasks++;
+                // g_print("INST: %d\n",g_utf8_validate (task.inst, -1, NULL));
+                tasks[num_tasks] = task;
+                num_tasks++;
 
-                state='N';
+                state = 'N';
             }
             break;
         case 'I':
-            //g_print("State %c\n",state);
-            if (cmpstr(p, "#!inst",-1)) {
+            // g_print("State %c\n",state);
+            if (cmpstr(p, "#!inst", -1)) {
                 state = 'T';
-            } 
-            else if (cmpstr(p, "#code",-1))
-            {
-                state ='H';
-                                    //g_print("State changed to code\n");
-                task.tags[task.l_tags]=ptr;
-                task.l_tags++;
+            } else {
+                // g_print("Offset: %d\n",ptr-task.inst);
 
-            }
-            else {
-                //g_print("Offset: %d\n",ptr-task.inst);
-                
-                ptr = g_utf8_offset_to_pointer (g_utf8_strncpy(ptr, p,g_utf8_strlen (p,-1)),g_utf8_strlen (p,-1));
-                ptr[0]='\n';
-                                ptr=g_utf8_next_char(ptr);
+                ptr = g_utf8_offset_to_pointer(
+                    g_utf8_strncpy(ptr, p, g_utf8_strlen(p, -1)),
+                    g_utf8_strlen(p, -1));
+                ptr[0] = '\n';
+                ptr = g_utf8_next_char(ptr);
 
-                //g_print("Text(I): \n%s\n",task.inst);
+                // g_print("Text(I): \n%s\n",task.inst);
             }
             break;
-        case 'H':
-                   //g_print("State %c\n",state);
-            if (cmpstr(p, "#!code",-1))
-            {
-                state='I';
-                task.tags[task.l_tags]=ptr;
-                task.l_tags++;
-               // g_print("State back from code...");
-            }
-            else
-            {
-                ptr = g_utf8_offset_to_pointer (g_utf8_strncpy(ptr, p,g_utf8_strlen (p,-1)),g_utf8_strlen (p,-1));
-                ptr[0]='\n';
-                                ptr=g_utf8_next_char(ptr);
-                //g_print("Text(C): \n%s\n",task.inst);
+
+        case 'C':
+            // g_print("State %c\n",state);
+            if (cmpstr(p, "#!cases", -1)) {
+                state = 'T';
+            } else {
+                ptr = g_utf8_offset_to_pointer(
+                    g_utf8_strncpy(ptr, p, g_utf8_strlen(p, -1)),
+                    g_utf8_strlen(p, -1));
+                ptr[0] = '\n';
+                ptr = g_utf8_next_char(ptr);
             }
             break;
-       case 'C':
-            //g_print("State %c\n",state);
-            if (cmpstr(p, "#!cases",-1))
-            {
-                state='T';
+        /*case 'P':
+            if (cmpstr(p, "#!popup", -1)) {
+                state = 'T';
+                task.popup_count++;
+            } else {
+
+                ptr = g_utf8_offset_to_pointer(
+                    g_utf8_strncpy(ptr, p, g_utf8_strlen(p, -1)),
+                    g_utf8_strlen(p, -1));
+                ptr[0] = '\n';
+                ptr = g_utf8_next_char(ptr);
             }
-            else
-            {
-ptr = g_utf8_offset_to_pointer (g_utf8_strncpy(ptr, p,g_utf8_strlen (p,-1)),g_utf8_strlen (p,-1));
-                ptr[0]='\n';
-                                ptr=g_utf8_next_char(ptr);
-            }
-        
+            break;*/
         }
-        
     }
-    
 }

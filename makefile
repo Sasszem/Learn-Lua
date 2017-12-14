@@ -1,7 +1,7 @@
-LIBS = gtk+-3.0
+LIBS = gtk+-3.0 lua5.2
 
 
-FILES =main tagger data
+FILES =main tagger data lua
 
 
 OBJS =$(foreach f, $(FILES),./build/$(f).o)

@@ -13,7 +13,7 @@ A programodban a kulcsszavak és egyéb nyelvi elemek színessel ki lesznek emel
 
 A feladat példaadatai és az elvárt válaszok a fenti táblázatban olvashatóak.
 Ha elkészültél a programoddal, a Ctrl-R billentyűkombinációval vagy a lenti Run gombbal(zöld nyíl) futtathatod
-Ezen utasításokat a Ctrl-I billentyűkombinációval vagy a lenti Instructions gombbal(I betű) nézheted meg újra
+Ezen utasításokat a Ctrl-I billentyűkombinációval vagy a lenti Instructions gombbal(I betű) nézheted meg újra1
 
 
 
@@ -27,21 +27,47 @@ A program egyetlen sorból áll:
 Írd be a programot a programterületre és futtasd!
 #!inst
 
+#popup Hi there!
+This is a popup window.
+It gives you useful info about this program
+This window is created in the section file with lines #popup title and #!popup, but you are not allowed to do that. If you brake that rule, you'll be tortured, executed an burried with your legs chopped off, so your ghost won't be able to walk
+<span color="#1199ff">print("Hello World!")</span>
+#!popup
+
+#popup Hi again!
+This is another popup
+There can be a maximum 8 of them per task.
+The title text that you may didn't even notice can be 16 characters long
+This text can be a maximum of 1024 characters long
+That makes up more than 8k bytes just for a feature that won't be used more than once
+What a waste of memory!
+#!popup
+
 #cases stdio
-function cases()
-case("","Hello World!")
-end
+main()
+
+return true
 #!cases
 #!task
 
 
 #task Print
 #inst
-Az előző példában láttuk, hogy a képernyőre való kiíratás a print utastással történik
-Jöjjön néhány további feladatat
+Talán kissé meglepődél, amikor az imént egy felugró ablakban jelent meg a "Hello World!" üzenet. Be kell valljuk, amit Te most magad előt látsz, az nem egy szokványos Lua környezet, hanem egy kicsikét megpiszkáltuk. Egyik példa erre a <a href="https://www.lua.org/manual/5.3/manual.html#pdf-print">print()</a> utasítás, amely a parancssorba való kiíratás helyett felugró ablakot jelenít meg. Ettől eltekintve majdhogynem azonos a Lua beépítet <a href="https://www.lua.org/manual/5.3/manual.html#pdf-print">print()</a> utasításával. Ezuen program Lua környezete más módosításokat is tartalmaz, de igyekeztünk hogy számodra kódolási szempontból a lehető legkevesebb letérés legyen észtevehető.
+<a href="http://www.index.hu">INDEX</a>
 #!inst
 
 #cases stdio
-case("","Hello\nWorld\n8\n")
+A=5
+
+a,b=run()
+print("[RET]"..tostring(a)..tostring(b))
+
+
+
+A=7
+a,b=run()
+print("[RET]"..tostring(a)..tostring(b))
+
 #!cases
 #!task
