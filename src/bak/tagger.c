@@ -3,11 +3,9 @@
 
 #include "tagger.h"
 
-
 GtkTextBuffer *program_buffer;
 
 GtkTextTag *tags[9];
-
 
 char *FLOW = "do else elseif end for if repeat then until while function\0";
 char *OPS = "and false not or true in\0";
@@ -16,19 +14,17 @@ char *IO = "print input\0";
 char *OTHER = "local nil\0";
 
 // char kw_types[4][7]= {"FLOW\0","OPS\0","FUNC\0","OTHER\0"};
-char colors[9][8] = {"#CD9103\0", "#FFDA00\0", "#0079BD\0", "#A40030\0",
-                     "#75CC2B\0", "#75CCEC\0", "#929292\0", "#149292\0","#FF0000\0"};
+char colors[9][8] = {"#CD9103\0", "#FFDA00\0", "#0079BD\0",
+                     "#A40030\0", "#75CC2B\0", "#75CCEC\0",
+                     "#929292\0", "#149292\0", "#FF0000\0"};
 
-
-void init_tagger()
-{
-program_buffer=(GtkTextBuffer*)gtk_builder_get_object(builder,"program_buffer");
-make_tags();
+void init_tagger() {
+    program_buffer =
+        (GtkTextBuffer *)gtk_builder_get_object(builder, "program_buffer");
+    make_tags();
 }
 
 void make_tags() {
-
-
 
     for (int i = 0; i < 4; i++) {
         tags[i] = gtk_text_buffer_create_tag(program_buffer, NULL, "foreground",
@@ -65,8 +61,9 @@ void tag_kw(char *kw, GtkTextTag *tag) {
             char b4 = *(text + offset - 1);
             char after = *(text + offset + l);
             if (((after == ' ') || (after == '\n') || (after == '\0') ||
-                 (after==')') || (after == '(') || (after == '\t')) &&
-                ((b4 == ' ') || (b4 == '\n') || (b4 == '\0') || (b4 == ')') || (b4 == '(') || (b4 == '\t'))) {
+                 (after == ')') || (after == '(') || (after == '\t')) &&
+                ((b4 == ' ') || (b4 == '\n') || (b4 == '\0') || (b4 == ')') ||
+                 (b4 == '(') || (b4 == '\t'))) {
                 gtk_text_buffer_get_iter_at_offset(program_buffer, &tags,
                                                    offset);
                 gtk_text_buffer_get_iter_at_offset(program_buffer, &tage,
@@ -188,7 +185,6 @@ void tag_kw_group(char *group, GtkTextTag *gtag) {
     g_free(items);
 }
 
-
 void tag_keywords() {
     g_print("Begin tagging...\n");
     GtkTextIter start, end;
@@ -206,16 +202,13 @@ void tag_keywords() {
     g_print("Tagging finished\n");
 }
 
-void tag_error_line(int line)
-{
-g_print("Begin tagging error at line %d\n",line);
-GtkTextIter start,end;
-gtk_text_buffer_get_iter_at_line (program_buffer,&start,line);
-gtk_text_buffer_get_iter_at_line (program_buffer,&end,line);
-gtk_text_iter_forward_line(&end);
-gtk_text_iter_forward_to_line_end (&end);
-gtk_text_buffer_apply_tag(program_buffer,tags[8],&start,&end);
-g_print("Error tagged...\n");
+void tag_error_line(int line) {
+    g_print("Begin tagging error at line %d\n", line);
+    GtkTextIter start, end;
+    gtk_text_buffer_get_iter_at_line(program_buffer, &start, line);
+    gtk_text_buffer_get_iter_at_line(program_buffer, &end, line);
+    gtk_text_iter_forward_line(&end);
+    gtk_text_iter_forward_to_line_end(&end);
+    gtk_text_buffer_apply_tag(program_buffer, tags[8], &start, &end);
+    g_print("Error tagged...\n");
 }
-
-

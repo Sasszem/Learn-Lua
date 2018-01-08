@@ -20,7 +20,7 @@ static void show_error(char *str) {
     char *token;
     token = strsep(&str, ":");
     token = strsep(&str, ":");
-    int line = g_ascii_strtoll (token,NULL,0) - 2;
+    int line = g_ascii_strtoll(token, NULL, 0) - 2;
     g_print("Error in line %d\n", line + 2);
     tag_error_line(line);
 

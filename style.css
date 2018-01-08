@@ -13,32 +13,12 @@
 {
     background-color: #0071d5;
 }
-#inst_view {
-    
-}
-#popup_label
+
+.tab_label
 {
-    font: serif;
-    font-size: 14px;
-    color: #000000;
-    background-color: #ffffff;
-}
-#popup_label:selected
-{
-    color:#ffffff;
-    background-color: #0071d5;
-}
-#popup
-{
-    font-size: 14px;
-}
-#console
-{
-    background-color:black;
-    color: green;
-    font: serif;
     font-size: 16px;
 }
+
 #lines
 {
     background-color: #023688;;
@@ -54,7 +34,7 @@ background-color: #ff00ff;
 #inst_view
 {
 
-font: serif 32;
+font: serif 18;
 }
 
 

@@ -210,5 +210,6 @@ void tag_error_line(int line) {
     gtk_text_iter_forward_line(&end);
     gtk_text_iter_forward_to_line_end(&end);
     gtk_text_buffer_apply_tag(program_buffer, tags[8], &start, &end);
+    gtk_text_view_scroll_to_iter (GTK_TEXT_VIEW(gtk_builder_get_object(builder, "program_view")),&start,0.15,TRUE,0.5,0.5);
     g_print("Error tagged...\n");
 }

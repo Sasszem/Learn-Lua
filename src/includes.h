@@ -1,6 +1,6 @@
 //includes.h
 #pragma once
-#include <glib.h>
+
 #include <gtk/gtk.h>
 
 

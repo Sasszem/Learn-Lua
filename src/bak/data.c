@@ -52,9 +52,9 @@ void load_task() {
                 null_str(task.inst, 8192);
                 null_str(task.cases, 4096);
 
-                //null_str(task.popup_titles, 128);
-                //null_str(task.popup_texts, 8192);
-                //task.popup_count = 0;
+                // null_str(task.popup_titles, 128);
+                // null_str(task.popup_texts, 8192);
+                // task.popup_count = 0;
                 stpcpy(task.name, p + 6);
                 state = 'T';
             }
@@ -125,19 +125,19 @@ void load_task() {
                 ptr = g_utf8_next_char(ptr);
             }
             break;
-        /*case 'P':
-            if (cmpstr(p, "#!popup", -1)) {
-                state = 'T';
-                task.popup_count++;
-            } else {
+            /*case 'P':
+                if (cmpstr(p, "#!popup", -1)) {
+                    state = 'T';
+                    task.popup_count++;
+                } else {
 
-                ptr = g_utf8_offset_to_pointer(
-                    g_utf8_strncpy(ptr, p, g_utf8_strlen(p, -1)),
-                    g_utf8_strlen(p, -1));
-                ptr[0] = '\n';
-                ptr = g_utf8_next_char(ptr);
-            }
-            break;*/
+                    ptr = g_utf8_offset_to_pointer(
+                        g_utf8_strncpy(ptr, p, g_utf8_strlen(p, -1)),
+                        g_utf8_strlen(p, -1));
+                    ptr[0] = '\n';
+                    ptr = g_utf8_next_char(ptr);
+                }
+                break;*/
         }
     }
 }
