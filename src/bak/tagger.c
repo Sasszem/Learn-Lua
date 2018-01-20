@@ -18,11 +18,7 @@ char colors[9][8] = {"#CD9103\0", "#FFDA00\0", "#0079BD\0",
                      "#A40030\0", "#75CC2B\0", "#75CCEC\0",
                      "#929292\0", "#149292\0", "#FF0000\0"};
 
-void init_tagger() {
-    program_buffer =
-        (GtkTextBuffer *)gtk_builder_get_object(builder, "program_buffer");
-    make_tags();
-}
+
 
 void make_tags() {
 
@@ -185,7 +181,7 @@ void tag_kw_group(char *group, GtkTextTag *gtag) {
     g_free(items);
 }
 
-void tag_keywords() {
+void _tag_keywords() {
     g_print("Begin tagging...\n");
     GtkTextIter start, end;
     gtk_text_buffer_get_bounds(program_buffer, &start, &end);
@@ -202,7 +198,7 @@ void tag_keywords() {
     g_print("Tagging finished\n");
 }
 
-void tag_error_line(int line) {
+void _tag_error_line(int line) {
     g_print("Begin tagging error at line %d\n", line);
     GtkTextIter start, end;
     gtk_text_buffer_get_iter_at_line(program_buffer, &start, line);
@@ -210,5 +206,16 @@ void tag_error_line(int line) {
     gtk_text_iter_forward_line(&end);
     gtk_text_iter_forward_to_line_end(&end);
     gtk_text_buffer_apply_tag(program_buffer, tags[8], &start, &end);
+    gtk_text_view_scroll_to_iter(
+        GTK_TEXT_VIEW(gtk_builder_get_object(builder, "program_view")), &start,
+        0.15, TRUE, 0.5, 0.5);
     g_print("Error tagged...\n");
 }
+
+void _init_tagger() {
+    program_buffer =
+        (GtkTextBuffer *)gtk_builder_get_object(builder, "program_buffer");
+    make_tags();
+}
+
+

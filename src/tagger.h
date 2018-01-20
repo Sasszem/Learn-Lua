@@ -1,11 +1,20 @@
 //tagger.h
 
-void tag_keywords();
-void make_tags();
-void init_tagger();
-void tag_kw_group(char *group, GtkTextTag *tag);
-void tag_error_line(int line);
+void _tag_keywords();
+void _init_tagger();
+void _tag_error_line(int line);
 
+static struct Tagger
+{
+void (*init)(void);
+void (*tag)(void);
+void (*tag_error)(int);
+} Tagger =
+{
+.init=&_init_tagger,
+.tag=&_tag_keywords,
+.tag_error=&_tag_error_line
+};
 
 
 //FLOW, OPS, FUNC, OTHER, STR, COMMENT, ESCAPE, functions

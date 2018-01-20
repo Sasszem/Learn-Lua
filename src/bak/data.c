@@ -4,18 +4,37 @@
 
 #include "globals.h"
 
+#include "widgets.h"
+
+#include "lua.h"
+
+#include <glib.h>
+#include <glib/gstdio.h>
+
+
+//#include <zip.h>
+
 #include "data.h"
 /* void free_task(struct Task task) {
      g_free(task.name);
      g_free(task.inst);
      g_free(task.cases);
  }*/
+
+//char currFile[64];
+
+
+
+/*
 void load_file(char *name) {
     g_file_get_contents(name, &file, NULL, NULL);
 
     // load_task();
     num_tasks = 0;
+    _load_tasks_from_file();
 }
+
+*/
 
 int cmpstr(char *str, char *pattern, int len) {
     if (len == -1)
@@ -27,69 +46,84 @@ int cmpstr(char *str, char *pattern, int len) {
     return 1;
 }
 
+/*
+void _load_task_file(TaskPath path)
+{
+if (cmpstr(path.file,currFile,-1)==0)
+{
+load_file(path.file);
+}
+set_instructions(tasks[path.id].inst);
+set_tester_program(tasks[path.id].tester);
+}
+
+*/
+
+
 void null_str(char *str, int len) {
     for (; len != 0; len--) {
         str[len - 1] = 0;
     }
 }
 
-void load_task() {
+char *strtok_single(char *str, char const *delims) {
+    static char *src = NULL;
+    char *p, *ret = 0;
+
+    if (str != NULL)
+        src = str;
+
+    if (src == NULL)
+        return NULL;
+
+    if ((p = strpbrk(src, delims)) != NULL) {
+        *p = 0;
+        ret = src;
+        src = ++p;
+
+    } else if (*src) {
+        ret = src;
+        src = NULL;
+    }
+
+    return ret;
+}
+/*
+void _load_tasks_from_file() {
 
     struct Task task;
     char state = 'N';
     char *ptr;
-    // States: Nothing, Task, Instructions, Popup, caSes
+    // States: Nothing, Task, Instructions,  tester(c)
     g_print("Begin loading task...\n");
-    for (char *p = strtok(file, "\n"); p != NULL; p = strtok(NULL, "\n")) {
-        g_print("[%c]Line: %s\n", state, p);
+    for (char *p = strtok_single(file, "\n"); p != NULL;
+         p = strtok_single(NULL, "\n")) {
+        // g_print("[%c]Line: %s\n", state, p);
         switch (state) {
 
         case 'N':
-            g_print("State %c\n", state);
+            // g_print("State %c\n", state);
             if (cmpstr(p, "#task", -1)) {
 
                 null_str(task.name, 64);
                 null_str(task.inst, 8192);
-                null_str(task.cases, 4096);
-
-                // null_str(task.popup_titles, 128);
-                // null_str(task.popup_texts, 8192);
-                // task.popup_count = 0;
+                null_str(task.tester, 4096);
                 stpcpy(task.name, p + 6);
                 state = 'T';
             }
             break;
         case 'T':
-            // g_print("State %c\n",state);
             if (cmpstr(p, "#inst", -1)) {
                 state = 'I';
                 ptr = task.inst;
             }
-            if (cmpstr(p, "#cases", -1)) {
+            if (cmpstr(p, "#tester", -1)) {
                 state = 'C';
-                ptr = task.cases;
+                ptr = task.tester;
             }
-            /*if (cmpstr(p, "#popup", -1)) {
-                g_print("Entering state 'P'\n");
-                state = 'P';
-
-                ptr = task.popup_texts + task.popup_count;
-                g_print("ptr set: %d\n", ptr);
-                g_print("Popup count: %d\n", task.popup_count);
-                g_print("title should be: %s\n", p + 7);
-                g_print("Title adr: %d\n",
-                        task.popup_titles + task.popup_count);
-                g_print("Prev. title: %s\n",
-                        task.popup_titles + (task.popup_count - 1));
-                stpcpy(task.popup_titles + task.popup_count, p + 7);
-                g_print("Popup title: %s\n",
-                        task.popup_titles[task.popup_count]);
-            }*/
             if (cmpstr(p, "#!task", -1)) {
 
-                g_print("Task name: %s\nText:%s\nCode:%s\n", task.name,
-                        task.inst, task.cases);
-                // g_print("INST: %d\n",g_utf8_validate (task.inst, -1, NULL));
+
                 tasks[num_tasks] = task;
                 num_tasks++;
 
@@ -97,7 +131,6 @@ void load_task() {
             }
             break;
         case 'I':
-            // g_print("State %c\n",state);
             if (cmpstr(p, "#!inst", -1)) {
                 state = 'T';
             } else {
@@ -114,8 +147,7 @@ void load_task() {
             break;
 
         case 'C':
-            // g_print("State %c\n",state);
-            if (cmpstr(p, "#!cases", -1)) {
+            if (cmpstr(p, "#!tester", -1)) {
                 state = 'T';
             } else {
                 ptr = g_utf8_offset_to_pointer(
@@ -125,19 +157,71 @@ void load_task() {
                 ptr = g_utf8_next_char(ptr);
             }
             break;
-            /*case 'P':
-                if (cmpstr(p, "#!popup", -1)) {
-                    state = 'T';
-                    task.popup_count++;
-                } else {
-
-                    ptr = g_utf8_offset_to_pointer(
-                        g_utf8_strncpy(ptr, p, g_utf8_strlen(p, -1)),
-                        g_utf8_strlen(p, -1));
-                    ptr[0] = '\n';
-                    ptr = g_utf8_next_char(ptr);
-                }
-                break;*/
         }
     }
+}
+*/
+
+
+//loads a task from path relative to TASKPATH
+void _open_task(TaskPath task)
+{
+//first check if the directory exists
+char *dir=g_build_filename(TASKPATH,task.section,task.name,NULL);
+if (!(g_file_test(dir,G_FILE_TEST_EXISTS)&&g_file_test(dir,G_FILE_TEST_IS_DIR)))
+{
+g_print("Error, dir \"%s\" dosn't exists!\n",dir);
+return; //Error.NO_SUCH_FILE;
+}
+//than check if the files exists
+char *tester_path, *instr_path;
+tester_path=g_build_filename(dir,TESTER_FILE,NULL);
+instr_path=g_build_filename(dir,INSTR_FILE,NULL);
+if (!(g_file_test(tester_path,G_FILE_TEST_EXISTS)&&g_file_test(tester_path,G_FILE_TEST_IS_REGULAR)))
+{
+g_print("Error, file \"%s\" dosn't exists!\n",tester_path);
+return; //Error.NO_SUCH_FILE;
+}
+if (!(g_file_test(instr_path,G_FILE_TEST_EXISTS)&&g_file_test(instr_path,G_FILE_TEST_IS_REGULAR)))
+{
+g_print("Error, file \"%s\" dosn't exists!\n",instr_path);
+return; //Error.NO_SUCH_FILE;
+}
+g_print("[Loading]All required files exists...\n");
+
+char *buffer;
+
+g_file_get_contents(instr_path,&buffer,NULL,NULL);
+Widgets.set_instructions(buffer);
+g_free(buffer);
+
+g_file_get_contents(tester_path,&buffer,NULL,NULL);
+Lua.set_tester(buffer);
+
+g_print("[Loading]Complete, now freeing memory...\n");
+g_free(buffer);
+
+//last, free the allocated buffers
+g_free(dir);
+g_free(tester_path);
+g_free(instr_path);
+}
+
+
+int save_code(char *name, char *code) {
+    if (g_utf8_strlen(code, -1) > 2048) {
+        return -1;
+    }
+    char *path = g_build_filename(SAVE_PATH, name, NULL);
+    g_print("File path: %s\n", path);
+    g_file_set_contents(path, code, -1, NULL);
+    g_free(path);
+    return 0;
+}
+char *load_code(char *name) {
+    char *buff;
+    char *path = g_build_filename(SAVE_PATH, name, NULL);
+    g_file_get_contents(path, &buff, NULL, NULL);
+    g_free(path);
+    return buff;
 }

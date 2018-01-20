@@ -15,8 +15,6 @@ GIcon *run_icon;
 #define GTK_CSS_FILE_NAME "./style.css"
 #define GTK_GUI_FILE_NAME "gui.glade"
 
-GtkBuilder *builder;
+#define SAVE_PATH "./save"
 
-GtkCssProvider *provider;
 
-char tasknum;

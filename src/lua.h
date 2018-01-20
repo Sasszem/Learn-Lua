@@ -1,7 +1,19 @@
 //lua.h
 #pragma once
-lua_State *S, *L; //The lua sandbox used to run the user's code
 
-void init_lua();
-void run_task(int taskno);
-void close_lua();
+
+void _run_task();
+void _set_tester(char *tester);
+
+
+
+static struct Lua {
+void (*run)();
+void (*set_tester)(char*);
+} Lua =
+{
+.run=&_run_task,
+.set_tester=_set_tester
+};
+
+

@@ -1,28 +1,40 @@
 //data.h
 
+
+
+#define TESTER_FILE "tester.lua"
+#define INSTR_FILE "instructions.txt"
+#define TASKPATH "./data/tasks/"
+
+
+//static struct DataError {int NO_SUTCH_FILE;} DataError = {.NO_SUTCH_FILE=-1};
+
+
+/*
 typedef struct Task {
     char name[64];
     // task name
     char inst[8192];
     // task instructions
-    char cases[4096];
-    // task test cases generator LUA code
-    int type;
-    //type=0: function - 1: stdio
-/*
-    
-    char popup_titles[8][16];
-    char popup_texts[8][1024];   
-    short popup_count;
-*/
+    char tester[4096];
+    // task tester LUA code
 } Task;
+*/
+//Path of a task
+typedef struct TaskPath {char *section,*name;} TaskPath;
+
+//Task tasks[64]
+//int num_tasks;
+void _open_task(TaskPath task);
 
 
-char *file;
-int len;
 
-void load_file(char* name);
-void load_task();
+static struct TaskLoader {
+void (*open_task)(TaskPath task);
+} TaskLoader = {.open_task=&_open_task};
 
-struct Task tasks[64];
-int num_tasks;
+
+
+
+int save_task(TaskPath *task, char* code);
+char* load_task(TaskPath *task);
