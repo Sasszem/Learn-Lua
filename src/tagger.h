@@ -16,5 +16,3 @@ void (*tag_error)(int);
 .tag_error=&_tag_error_line
 };
 
-
-//FLOW, OPS, FUNC, OTHER, STR, COMMENT, ESCAPE, functions
