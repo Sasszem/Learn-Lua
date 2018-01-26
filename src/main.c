@@ -25,15 +25,10 @@ void activate(GtkApplication *app, gpointer user_data) {
     task.name = "Introduction";
     TaskLoader.open_task(task);
 
-    GtkTextIter *pos;
-    // g_print("Selected task %s\n", tasks[tasknum].name);
-    // gtk_label_set_markup(
-    //    GTK_LABEL(gtk_builder_get_object(builder, "inst_label")),
-    //    tasks[tasknum].inst);
+    TaskLoader.list();
+    g_print("Setup done\n");
     Widgets.show();
-
 }
-
 
 int main(int argc, char **argv) {
 

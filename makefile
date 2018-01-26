@@ -1,6 +1,8 @@
 LIBS = gtk+-3.0 lua5.2
 
 
+
+
 FILES =main tagger data lua widgets
 
 
@@ -10,6 +12,7 @@ OBJS =$(foreach f, $(FILES),./build/$(f).o)
 
 CFLAGS = `pkg-config --cflags gtk+-3.0` -g
 _LIBS=`pkg-config --libs $(LIBS)` -g
+
 
 build: $(foreach f, $(FILES),./src/$(f).c)
 	@make cleanup

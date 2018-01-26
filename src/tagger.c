@@ -207,13 +207,12 @@ void _tag_error_line(int line) {
     gtk_text_iter_forward_to_line_end(&end);
     gtk_text_buffer_apply_tag(program_buffer, tags[8], &start, &end);
     gtk_text_view_scroll_to_iter(
-        GTK_TEXT_VIEW(Widgets.get_object("program_view")), &start,
-        0.15, TRUE, 0.5, 0.5);
+        GTK_TEXT_VIEW(Widgets.get_object("program_view")), &start, 0.15, TRUE,
+        0.5, 0.5);
     g_print("Error tagged...\n");
 }
 
 void _init_tagger() {
-    program_buffer =
-        (GtkTextBuffer *)Widgets.get_object("program_buffer");
+    program_buffer = (GtkTextBuffer *)Widgets.get_object("program_buffer");
     make_tags();
 }

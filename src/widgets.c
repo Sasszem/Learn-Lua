@@ -1,27 +1,20 @@
 // widgets.c
 
-
 #include "includes.h"
 
-
+#include "data.h"
 #include "globals.h"
 #include "lua.h"
 #include "tagger.h"
-
-
 static GtkBuilder *builder;
 
 static GtkCssProvider *provider;
 
-void _show()
-{
+void _show() {
     gtk_widget_show_all(GTK_WIDGET(gtk_builder_get_object(builder, "window")));
 }
 
-void *_get_object(char *name)
-{
-return gtk_builder_get_object(builder,name);
-}
+void *_get_object(char *name) { return gtk_builder_get_object(builder, name); }
 
 static void apply_css(GtkWidget *widget, GtkCssProvider *provider) {
     gtk_style_context_add_provider(gtk_widget_get_style_context(widget),
@@ -58,6 +51,33 @@ void _connect_signal(char *name, char *signal, void *funcs) {
                      G_CALLBACK(funcs), NULL);
 }
 
+void _signal_task_selected(GtkWidget *w, gpointer data) {
+
+    GtkTreeSelection *select;
+    select =
+        gtk_tree_view_get_selection(GTK_TREE_VIEW(_get_object("tasks_view")));
+
+    GtkTreeIter taski, sectioni;
+    GtkTreeModel *model = GTK_TREE_MODEL(_get_object("tasks_tree"));
+    gtk_tree_selection_get_selected(select, &model, &taski);
+
+    char *section = NULL, *task = NULL;
+    gtk_tree_model_get(model, &taski, 0, &task, -1);
+    if (gtk_tree_model_iter_parent(model, &sectioni, &taski)) {
+        gtk_tree_model_get(model, &sectioni, 0, &section, -1);
+        g_print("Activated: %s/%s\n", section, task);
+
+        TaskPath path;
+        path.section = section;
+        path.name = task;
+        TaskLoader.open_task(path);
+        gtk_notebook_set_current_page(GTK_NOTEBOOK(_get_object("notebook")), 0);
+    }
+
+    g_free(task);
+    g_free(section);
+}
+
 static void setup_widgets() {
     builder = gtk_builder_new_from_file(GTK_GUI_FILE_NAME);
     gtk_application_add_window(
@@ -66,6 +86,12 @@ static void setup_widgets() {
     //    connect_signal("run_btn", "clicked", btn_run);
     _connect_signal("run_btn", "clicked", btn_run);
     _connect_signal("program_buffer", "changed", retag);
+    _connect_signal("tasks_view", "row-activated", _signal_task_selected);
+
+    GtkTreeSelection *select;
+    select =
+        gtk_tree_view_get_selection(GTK_TREE_VIEW(_get_object("tasks_view")));
+    gtk_tree_selection_set_mode(select, GTK_SELECTION_SINGLE);
 }
 
 static void setup_css() {

@@ -115,11 +115,9 @@ static int run_user_code(lua_State *L) {
     GtkTextIter start, end;
     char *text;
     gtk_text_buffer_get_bounds(
-        GTK_TEXT_BUFFER(Widgets.get_object( "program_buffer")),
-        &start, &end);
+        GTK_TEXT_BUFFER(Widgets.get_object("program_buffer")), &start, &end);
     text = gtk_text_buffer_get_text(
-        GTK_TEXT_BUFFER(Widgets.get_object("program_buffer")),
-        &start, &end, 0);
+        GTK_TEXT_BUFFER(Widgets.get_object("program_buffer")), &start, &end, 0);
     run_code(text);
     return lua_gettop(L);
 }

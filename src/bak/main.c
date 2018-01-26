@@ -12,33 +12,26 @@ char *contents;
 int len;
 GError *error;
 
-
 void activate(GtkApplication *app, gpointer user_data) {
-    //setup_widgets();
+    // setup_widgets();
 
-    //setup_css();
+    // setup_css();
     Widgets.setup();
 
-    //init_tagger();
+    // init_tagger();
     Tagger.init();
     TaskPath task;
-    task.section="Tutorial";
-    task.name="Introduction";
+    task.section = "Tutorial";
+    task.name = "Introduction";
     TaskLoader.open_task(task);
-    
-    
-    GtkTextIter *pos;
-    //g_print("Selected task %s\n", tasks[tasknum].name);
-    //gtk_label_set_markup(
-    //    GTK_LABEL(gtk_builder_get_object(builder, "inst_label")),
-    //    tasks[tasknum].inst);
 
-    gtk_widget_show_all(GTK_WIDGET(gtk_builder_get_object(builder, "window")));
+    TaskLoader.list();
+    g_print("Setup done\n");
+    Widgets.show();
 }
 
-#define TASKNUM 0
 int main(int argc, char **argv) {
-    tasknum = TASKNUM;
+
     int status;
 
     app = gtk_application_new("org.gtk.example", G_APPLICATION_FLAGS_NONE);

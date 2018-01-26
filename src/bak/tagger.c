@@ -3,6 +3,8 @@
 
 #include "tagger.h"
 
+#include "widgets.h"
+
 GtkTextBuffer *program_buffer;
 
 GtkTextTag *tags[9];
@@ -17,8 +19,6 @@ char *OTHER = "local nil\0";
 char colors[9][8] = {"#CD9103\0", "#FFDA00\0", "#0079BD\0",
                      "#A40030\0", "#75CC2B\0", "#75CCEC\0",
                      "#929292\0", "#149292\0", "#FF0000\0"};
-
-
 
 void make_tags() {
 
@@ -207,15 +207,12 @@ void _tag_error_line(int line) {
     gtk_text_iter_forward_to_line_end(&end);
     gtk_text_buffer_apply_tag(program_buffer, tags[8], &start, &end);
     gtk_text_view_scroll_to_iter(
-        GTK_TEXT_VIEW(gtk_builder_get_object(builder, "program_view")), &start,
-        0.15, TRUE, 0.5, 0.5);
+        GTK_TEXT_VIEW(Widgets.get_object("program_view")), &start, 0.15, TRUE,
+        0.5, 0.5);
     g_print("Error tagged...\n");
 }
 
 void _init_tagger() {
-    program_buffer =
-        (GtkTextBuffer *)gtk_builder_get_object(builder, "program_buffer");
+    program_buffer = (GtkTextBuffer *)Widgets.get_object("program_buffer");
     make_tags();
 }
-
-

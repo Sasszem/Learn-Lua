@@ -11,7 +11,6 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 
-
 //#include <zip.h>
 
 #include "data.h"
@@ -21,9 +20,7 @@
      g_free(task.cases);
  }*/
 
-//char currFile[64];
-
-
+// char currFile[64];
 
 /*
 void load_file(char *name) {
@@ -58,7 +55,6 @@ set_tester_program(tasks[path.id].tester);
 }
 
 */
-
 
 void null_str(char *str, int len) {
     for (; len != 0; len--) {
@@ -162,51 +158,91 @@ void _load_tasks_from_file() {
 }
 */
 
+// loads a task from path relative to TASKPATH
+void _open_task(TaskPath task) {
+    // first check if the directory exists
+    char *dir = g_build_filename(TASKPATH, task.section, task.name, NULL);
+    if (!(g_file_test(dir, G_FILE_TEST_EXISTS) &&
+          g_file_test(dir, G_FILE_TEST_IS_DIR))) {
+        g_print("Error, dir \"%s\" dosn't exists!\n", dir);
+        return; // Error.NO_SUCH_FILE;
+    }
+    // than check if the files exists
+    char *tester_path, *instr_path;
+    tester_path = g_build_filename(dir, TESTER_FILE, NULL);
+    instr_path = g_build_filename(dir, INSTR_FILE, NULL);
+    if (!(g_file_test(tester_path, G_FILE_TEST_EXISTS) &&
+          g_file_test(tester_path, G_FILE_TEST_IS_REGULAR))) {
+        g_print("Error, file \"%s\" dosn't exists!\n", tester_path);
+        return; // Error.NO_SUCH_FILE;
+    }
+    if (!(g_file_test(instr_path, G_FILE_TEST_EXISTS) &&
+          g_file_test(instr_path, G_FILE_TEST_IS_REGULAR))) {
+        g_print("Error, file \"%s\" dosn't exists!\n", instr_path);
+        return; // Error.NO_SUCH_FILE;
+    }
+    g_print("[Loading]All required files exists...\n");
 
-//loads a task from path relative to TASKPATH
-void _open_task(TaskPath task)
-{
-//first check if the directory exists
-char *dir=g_build_filename(TASKPATH,task.section,task.name,NULL);
-if (!(g_file_test(dir,G_FILE_TEST_EXISTS)&&g_file_test(dir,G_FILE_TEST_IS_DIR)))
-{
-g_print("Error, dir \"%s\" dosn't exists!\n",dir);
-return; //Error.NO_SUCH_FILE;
-}
-//than check if the files exists
-char *tester_path, *instr_path;
-tester_path=g_build_filename(dir,TESTER_FILE,NULL);
-instr_path=g_build_filename(dir,INSTR_FILE,NULL);
-if (!(g_file_test(tester_path,G_FILE_TEST_EXISTS)&&g_file_test(tester_path,G_FILE_TEST_IS_REGULAR)))
-{
-g_print("Error, file \"%s\" dosn't exists!\n",tester_path);
-return; //Error.NO_SUCH_FILE;
-}
-if (!(g_file_test(instr_path,G_FILE_TEST_EXISTS)&&g_file_test(instr_path,G_FILE_TEST_IS_REGULAR)))
-{
-g_print("Error, file \"%s\" dosn't exists!\n",instr_path);
-return; //Error.NO_SUCH_FILE;
-}
-g_print("[Loading]All required files exists...\n");
+    char *buffer;
 
-char *buffer;
+    g_file_get_contents(instr_path, &buffer, NULL, NULL);
+    Widgets.set_instructions(buffer);
+    g_free(buffer);
 
-g_file_get_contents(instr_path,&buffer,NULL,NULL);
-Widgets.set_instructions(buffer);
-g_free(buffer);
+    g_file_get_contents(tester_path, &buffer, NULL, NULL);
+    Lua.set_tester(buffer);
 
-g_file_get_contents(tester_path,&buffer,NULL,NULL);
-Lua.set_tester(buffer);
+    g_print("[Loading]Complete, now freeing memory...\n");
+    g_free(buffer);
 
-g_print("[Loading]Complete, now freeing memory...\n");
-g_free(buffer);
-
-//last, free the allocated buffers
-g_free(dir);
-g_free(tester_path);
-g_free(instr_path);
+    // last, free the allocated buffers
+    g_free(dir);
+    g_free(tester_path);
+    g_free(instr_path);
 }
 
+void _fill_list() {
+    char *sections_list;
+    char *sections_list_path = g_build_filename(TASKPATH, LIST_FILE_NAME, NULL);
+    gboolean success =
+        g_file_get_contents(sections_list_path, &sections_list, NULL, NULL);
+    g_free(sections_list_path);
+    if (!success) {
+        return;
+    }
+    GtkTreeStore *store = GTK_TREE_STORE(Widgets.get_object("tasks_tree"));
+    GtkTreeIter section, task;
+    g_print("Begin listing...\n");
+    for (char *p = strtok(sections_list, "\n"); p != NULL;
+         p = strtok(NULL, "\n")) {
+        // g_print("Starting section %s\n", p);
+        char *tasks_list;
+        char *tasks_list_path =
+            g_build_filename(TASKPATH, p, LIST_FILE_NAME, NULL);
+        // g_print("Path: %s\n",tasks_list_path);
+        gboolean success =
+            g_file_get_contents(tasks_list_path, &tasks_list, NULL, NULL);
+        g_free(tasks_list_path);
+        if (!success) {
+            g_print("Skipping section %s\n", p);
+            continue;
+        }
+        gtk_tree_store_append(store, &section, NULL);
+        gtk_tree_store_set(store, &section, 0, p, -1);
+        char *state;
+        for (char *l = strtok_r(tasks_list, "\n", &state); l != NULL;
+             l = strtok_r(NULL, "\n", &state)) {
+            gtk_tree_store_append(store, &task, &section);
+            gtk_tree_store_set(store, &task, 0, l, -1);
+        }
+        g_free(tasks_list);
+    }
+
+    gtk_tree_view_expand_all(GTK_TREE_VIEW(Widgets.get_object("tasks_view")));
+    g_free(sections_list);
+
+    g_print("Listing done...\n");
+}
 
 int save_code(char *name, char *code) {
     if (g_utf8_strlen(code, -1) > 2048) {

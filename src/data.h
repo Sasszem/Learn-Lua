@@ -26,14 +26,20 @@ typedef struct TaskPath {char *section,*name;} TaskPath;
 //Task tasks[64]
 //int num_tasks;
 void _open_task(TaskPath task);
-
+void _fill_list();
 
 
 static struct TaskLoader {
 void (*open_task)(TaskPath task);
-} TaskLoader = {.open_task=&_open_task};
+void (*list)();
+} TaskLoader = {.open_task=&_open_task,.list=&_fill_list};
 
+static struct SaveManager {
 
+} SaveManager = 
+{
+
+};
 
 
 int save_task(TaskPath *task, char* code);
