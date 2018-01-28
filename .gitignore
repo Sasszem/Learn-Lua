@@ -1,9 +1,9 @@
 #Test files
 *~
-*./build
-*./bak
-main*
-*./save
+build/
+src/bak/
+main
+save/
 
 # Prerequisites
 *.d

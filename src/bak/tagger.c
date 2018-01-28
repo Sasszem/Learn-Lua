@@ -143,50 +143,58 @@ void tag_strings(GtkTextTag *tag, GtkTextTag *esc) {
 
     int offset = 0;
 
-    GtkTextIter strs, stre; //iters
+    GtkTextIter strs, stre; // iters
     GtkTextIter escs, esce;
 
-    int state = 0; // 0 if looking for start of string("), 1 if looking for
-                   // end of comment(", but not \")
-    int escape = 0; //if escape next char
-    while (*(text + offset) != '\0') { //looping until eos
+    int state = 0;  // 0 if looking for start of string("), 1 if looking for
+                    // end of comment(", but not \")
+    int escape = 0; // if escape next char
+    while (*(text + offset) != '\0') { // looping until eos
 
-        if ((state == 0) && (text[offset] == '"')) { //if looking for start of a string and found one
-            state = 1; //change state
-            gtk_text_buffer_get_iter_at_offset(program_buffer, &strs, offset); //save pos
+        if ((state == 0) &&
+            (text[offset] ==
+             '"')) {   // if looking for start of a string and found one
+            state = 1; // change state
+            gtk_text_buffer_get_iter_at_offset(program_buffer, &strs,
+                                               offset); // save pos
 
-        } else if (state == 1 && (text[offset] == '"' & escape == 0)) { //if looking for end of string and found one, but not escaping
+        } else if (state == 1 && (text[offset] == '"' &
+                                  escape == 0)) { // if looking for end of
+                                                  // string and found one, but
+                                                  // not escaping
 
-            state = 0; //reset state
+            state = 0; // reset state
             gtk_text_buffer_get_iter_at_offset(program_buffer, &stre,
-                                               offset + 1); //get pos
-            //swipe out tags from string, EXCEPT escaping
+                                               offset + 1); // get pos
+            // swipe out tags from string, EXCEPT escaping
             for (int i = 0; i < 4; i++) {
                 gtk_text_buffer_remove_tag(program_buffer, tags[i], &strs,
                                            &stre);
-            }            //apply new tag
+            } // apply new tag
             gtk_text_buffer_apply_tag(program_buffer, tag, &strs, &stre);
         }
 
-        if (state == 1) { //if still inside a string
-            if (text[offset] == '\\' && escape == 0) { //if found a '\'
-                escape = 1; //start of escape
+        if (state == 1) { // if still inside a string
+            if (text[offset] == '\\' && escape == 0) { // if found a '\'
+                escape = 1;                            // start of escape
                 gtk_text_buffer_get_iter_at_offset(program_buffer, &escs,
-                                                   offset); //save pos
-            } else if (escape == 1) { //if escaping(e.g the prev. char was a '\')
-                escape = 0;//reset flag
+                                                   offset); // save pos
+            } else if (escape ==
+                       1) { // if escaping(e.g the prev. char was a '\')
+                escape = 0; // reset flag
                 gtk_text_buffer_get_iter_at_offset(program_buffer, &esce,
-                                                   offset + 1);//get pos
-                gtk_text_buffer_apply_tag(program_buffer, esc, &escs, &esce); //apply tag
+                                                   offset + 1); // get pos
+                gtk_text_buffer_apply_tag(program_buffer, esc, &escs,
+                                          &esce); // apply tag
             }
         }
 
         offset++;
     }
-    //if left the loop without closing last string
-    //eg if we forgot a "
-    //then close the string and apply tag
-    if (state == 1) { 
+    // if left the loop without closing last string
+    // eg if we forgot a "
+    // then close the string and apply tag
+    if (state == 1) {
         gtk_text_buffer_get_iter_at_offset(program_buffer, &stre, offset);
 
         for (int i = 0; i < 4; i++) {
@@ -196,7 +204,7 @@ void tag_strings(GtkTextTag *tag, GtkTextTag *esc) {
     }
 }
 
-//apply a tag to a group of keyword defined above
+// apply a tag to a group of keyword defined above
 void tag_kw_group(char *group, GtkTextTag *gtag) {
     char *items = g_strdup(group);
 
@@ -209,11 +217,10 @@ void tag_kw_group(char *group, GtkTextTag *gtag) {
     g_free(items);
 }
 
-
-//tag everythingŰ(not just keywords)
-//I know the name is misleading :(
+// tag everythingŰ(not just keywords)
+// I know the name is misleading :(
 void _tag_keywords() {
-    //g_print("[Tagger]Begin tagging...\n");
+    // g_print("[Tagger]Begin tagging...\n");
 
     // get the text
     GtkTextIter start, end;
@@ -236,10 +243,10 @@ void _tag_keywords() {
 
     // free memory
     g_free(text);
-    //g_print("[Tagger]Tagging finished\n");
+    // g_print("[Tagger]Tagging finished\n");
 }
 
-//Tag a line with red where an error happened
+// Tag a line with red where an error happened
 void _tag_error_line(int line) {
     g_print("[Tagger]Begin tagging error at line %d\n", line);
     GtkTextIter start, end;
@@ -254,7 +261,7 @@ void _tag_error_line(int line) {
     g_print("[Tagger]Error tagged...\n");
 }
 
-//init the tagger
+// init the tagger
 void _init_tagger() {
     program_buffer = (GtkTextBuffer *)Widgets.get_object("program_buffer");
     make_tags();

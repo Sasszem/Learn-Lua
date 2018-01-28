@@ -2,12 +2,11 @@
 
 #include "includes.h"
 
-#include "globals.h"
 #include "data.h"
+#include "globals.h"
 
 #include "lua.h"
 #include "tagger.h"
-
 
 // the builder
 static GtkBuilder *builder;
@@ -31,9 +30,9 @@ void _connect_signal(char *name, char *signal, void *funcs) {
 // weraper aroung gtk_builder_get_object
 void *_get_object(char *name) { return gtk_builder_get_object(builder, name); }
 
-void _set_code(char *code)
-{
-gtk_text_buffer_set_text(GTK_TEXT_BUFFER(_get_object("program_buffer")),code,-1);
+void _set_code(char *code) {
+    gtk_text_buffer_set_text(GTK_TEXT_BUFFER(_get_object("program_buffer")),
+                             code, -1);
 }
 
 //-------------------------
@@ -46,17 +45,17 @@ static void btn_run(GtkApplication *app, gpointer user_data) { Lua.run(); }
 // callback for editing the code
 static void retag(GtkWidget *w, gpointer data) { Tagger.tag(); }
 
-//callback for save button
-static void _signal_save(GtkWidget *w, gpointer data)
-{
-char *code;
-GtkTextIter start,end;
-gtk_text_buffer_get_bounds(GTK_TEXT_BUFFER(_get_object("program_buffer")),&start,&end);
-code=gtk_text_buffer_get_text(GTK_TEXT_BUFFER(_get_object("program_buffer")),&start,&end,FALSE);
-TaskLoader.save(code);
-g_free(code);
+// callback for save button
+static void _signal_save(GtkWidget *w, gpointer data) {
+    char *code;
+    GtkTextIter start, end;
+    gtk_text_buffer_get_bounds(GTK_TEXT_BUFFER(_get_object("program_buffer")),
+                               &start, &end);
+    code = gtk_text_buffer_get_text(
+        GTK_TEXT_BUFFER(_get_object("program_buffer")), &start, &end, FALSE);
+    TaskLoader.save(code);
+    g_free(code);
 }
-
 
 // callback for double-clicking a row in the tasks view
 static void _signal_task_selected(GtkWidget *w, gpointer data) {
@@ -80,8 +79,6 @@ static void _signal_task_selected(GtkWidget *w, gpointer data) {
         TaskLoader.open_task(path);
         gtk_notebook_set_current_page(GTK_NOTEBOOK(_get_object("notebook")), 0);
     }
-        
-
 
     g_free(task);
     g_free(section);
@@ -118,8 +115,8 @@ static void setup_widgets() {
     _connect_signal("run_btn", "clicked", btn_run);
     _connect_signal("program_buffer", "changed", retag);
     _connect_signal("tasks_view", "row-activated", _signal_task_selected);
-    _connect_signal("save_btn","clicked",_signal_save);
-    _connect_signal("window","destroy",_signal_save);
+    _connect_signal("save_btn", "clicked", _signal_save);
+    _connect_signal("window", "destroy", _signal_save);
     GtkTreeSelection *select;
     select =
         gtk_tree_view_get_selection(GTK_TREE_VIEW(_get_object("tasks_view")));
