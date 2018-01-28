@@ -6,6 +6,7 @@
 #include "tagger.h"
 #include "widgets.h"
 
+#include "globals.h"
 void activate(GtkApplication *app, gpointer user_data) {
     Widgets.setup();
     Tagger.init();

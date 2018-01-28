@@ -17,14 +17,17 @@ void _open_task(TaskPath task);
 void _fill_list();
 
 
+
+void _save_code(char* code);
+void _load_code();
+
 //Interface to 'data.h'
 static struct TaskLoader {
 void (*open_task)(TaskPath task);
 void (*list)();
-} TaskLoader = {.open_task=&_open_task,.list=&_fill_list};
+void (*save)(char *code);
+void (*load_save)();
+} TaskLoader = {.open_task=&_open_task,.list=&_fill_list,.save=&_save_code,.load_save=&_load_code};
 
 
 
-
-int save_task(TaskPath *task, char* code);
-char* load_task(TaskPath *task);

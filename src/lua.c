@@ -10,7 +10,9 @@
 
 #include "widgets.h"
 
-#include <glib.h>
+//#include <glib.h>
+
+#include "globals.h"
 
 lua_State *L; // The lua sandbox used to run the user's code
 

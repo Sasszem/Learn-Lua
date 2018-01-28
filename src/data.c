@@ -2,8 +2,6 @@
 
 #include "includes.h"
 
-#include "globals.h"
-
 #include "widgets.h"
 
 #include "lua.h"
@@ -12,6 +10,10 @@
 #include <glib/gstdio.h>
 
 #include "data.h"
+
+#include "globals.h"
+
+TaskPath current = {.section=NULL,.name=NULL};
 
 // loads a task from path relative to TASKPATH
 void _open_task(TaskPath task) {
@@ -67,6 +69,15 @@ void _open_task(TaskPath task) {
     g_free(instr_path);
 
     g_free(buffer);
+    
+    g_free(current.section);
+    g_free(current.name);
+
+    current.section=g_strdup(task.section);
+    current.name=g_strdup(task.name);
+
+    _load_code();
+
 }
 
 // Lists all the sections and tasks, filling the treeview rows
@@ -138,21 +149,27 @@ void _fill_list() {
     g_print("[Data]Listing done...\n");
 }
 
-int save_code(char *name, char *code) {
-    if (g_utf8_strlen(code, -1) > 2048) {
-        return -1;
-    }
-    char *path = g_build_filename(SAVE_PATH, name, NULL);
+void _save_code(char *code) {
+
+    char *dirpath=g_build_filename(SAVE_PATH, current.section,NULL);
+    char *path = g_build_filename(dirpath, current.name, NULL);
     g_print("[Data]File path: %s\n", path);
-    g_file_set_contents(path, code, -1, NULL);
+    g_mkdir_with_parents(dirpath,510);//RWX permission for user and group, RW for all - octal 0776
+    GError *err=NULL;
+    if(!g_file_set_contents(path, code, -1, &err))
+    {
+        g_print("[Data]An error occured: \n   %s\n",err->message);
+    }
     g_free(path);
-    return 0;
+    g_free(dirpath);
+        
 }
 // stub, do not use it yet...
-char *load_code(char *name) {
+void _load_code() {
     char *buff;
-    char *path = g_build_filename(SAVE_PATH, name, NULL);
-    g_file_get_contents(path, &buff, NULL, NULL);
+    char *path = g_build_filename(SAVE_PATH, current.section, current.name, NULL);
+    gboolean succ=g_file_get_contents(path, &buff, NULL, NULL);
     g_free(path);
-    return buff;
+    if (succ){
+    Widgets.set_code(buff);}
 }

@@ -16,7 +16,7 @@ _LIBS=`pkg-config --libs $(LIBS)` -g
 
 build: $(foreach f, $(FILES),./src/$(f).c)
 	@make cleanup
-	@rm main
+	@rm main || true
 	mkdir build
 	@make obj
 	@make link

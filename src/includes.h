@@ -5,7 +5,7 @@
 
 
 
-#include "globals.h"
+//#include "globals.h"
 #include <string.h>
 
 #include <lua.h>
