@@ -6,6 +6,8 @@
 #define INSTR_FILE "instructions.txt"
 #define TASKPATH "./data/tasks/"
 
+#define SAVEPATH "./save/"
+
 
 //Path of a task
 typedef struct TaskPath {char *section,*name;} TaskPath;
@@ -18,16 +20,20 @@ void _fill_list();
 
 
 
-void _save_code(char* code);
+void _save_code();
 void _load_code();
+
+void _complete_task();
+
 
 //Interface to 'data.h'
 static struct TaskLoader {
 void (*open_task)(TaskPath task);
 void (*list)();
-void (*save)(char *code);
+void (*save)();
+void (*complete)();
 void (*load_save)();
-} TaskLoader = {.open_task=&_open_task,.list=&_fill_list,.save=&_save_code,.load_save=&_load_code};
+} TaskLoader = {.open_task=&_open_task,.list=&_fill_list,.save=&_save_code,.load_save=&_load_code,.complete=&_complete_task};
 
 
 

@@ -26,8 +26,8 @@ void _set_tester(char *code) {
 
 static int custom_print(lua_State *L);
 static int run_user_code(lua_State *L);
-static void run_code(char *code);
-static void run_task_code();
+static int run_code(char *code);
+static int run_task_code();
 
 static void
 show_error(char *str) { // shows a nice popup pointing to the error...
@@ -81,8 +81,11 @@ void _run_task() {                          // run current tester code
     g_print("[Lua]Custom print() registated\n");
     lua_register(L, "run",
                  run_user_code); // register function to run the users code
-    run_task_code();             // run tester
-
+    if (run_task_code())             // run tester
+{
+    g_print("Tester returned True, advancing...\n");
+    Widgets.next();
+}
     close_lua(); // cleanup
 }
 
@@ -149,10 +152,10 @@ static int run_user_code(lua_State *L) {
 }
 
 // run the tester
-static void run_task_code() { run_code(tester); }
+static int run_task_code() { return run_code(tester); }
 
 // run any code
-static void run_code(char *code) {
+static int run_code(char *code) {
     int error; // stores error code
     g_print("[Lua]Running code...\n");
 
@@ -163,4 +166,6 @@ static void run_code(char *code) {
         // show errors
         lua_pop(L, 1); /* pop error message from the stack */
     }
+    
+    return lua_toboolean(L,-1);
 }

@@ -13,6 +13,10 @@ static GtkBuilder *builder;
 
 static GtkCssProvider *provider;
 
+static GtkTreeIter current_task_iter;
+
+int next_task();
+
 //-----------------------
 //  WRAPPERS START HERE
 //-----------------------
@@ -63,13 +67,13 @@ static void _signal_task_selected(GtkWidget *w, gpointer data) {
     select =
         gtk_tree_view_get_selection(GTK_TREE_VIEW(_get_object("tasks_view")));
 
-    GtkTreeIter taski, sectioni;
+    GtkTreeIter sectioni;
     GtkTreeModel *model = GTK_TREE_MODEL(_get_object("tasks_tree"));
-    gtk_tree_selection_get_selected(select, &model, &taski);
+    gtk_tree_selection_get_selected(select, &model, &current_task_iter);
 
     char *section = NULL, *task = NULL;
-    gtk_tree_model_get(model, &taski, 0, &task, -1);
-    if (gtk_tree_model_iter_parent(model, &sectioni, &taski)) {
+    gtk_tree_model_get(model, &current_task_iter, 0, &task, -1);
+    if (gtk_tree_model_iter_parent(model, &sectioni, &current_task_iter)) {
         gtk_tree_model_get(model, &sectioni, 0, &section, -1);
         g_print("[Widgets]Activated: %s/%s\n", section, task);
 
@@ -89,6 +93,31 @@ void _set_instructions(char *inst) {
 
     gtk_label_set_markup(
         GTK_LABEL(gtk_builder_get_object(builder, "inst_label")), inst);
+}
+
+void _signal_next() {
+    if (next_task() < 0) {
+        return;
+    }
+
+    GtkTreeIter sectioni;
+    GtkTreeModel *model = GTK_TREE_MODEL(_get_object("tasks_tree"));
+
+    char *section = NULL, *task = NULL;
+    gtk_tree_model_get(model, &current_task_iter, 0, &task, -1);
+    if (gtk_tree_model_iter_parent(model, &sectioni, &current_task_iter)) {
+        gtk_tree_model_get(model, &sectioni, 0, &section, -1);
+        g_print("[Widgets]Activated: %s/%s\n", section, task);
+
+        TaskPath path;
+        path.section = section;
+        path.name = task;
+        TaskLoader.open_task(path);
+        gtk_notebook_set_current_page(GTK_NOTEBOOK(_get_object("notebook")), 0);
+    }
+
+    g_free(task);
+    g_free(section);
 }
 
 //------------------------
@@ -117,10 +146,96 @@ static void setup_widgets() {
     _connect_signal("tasks_view", "row-activated", _signal_task_selected);
     _connect_signal("save_btn", "clicked", _signal_save);
     _connect_signal("window", "destroy", _signal_save);
+    //_connect_signal("next_btn", "clicked", _signal_next);
     GtkTreeSelection *select;
     select =
         gtk_tree_view_get_selection(GTK_TREE_VIEW(_get_object("tasks_view")));
     gtk_tree_selection_set_mode(select, GTK_SELECTION_SINGLE);
+}
+
+void _set_start() {
+
+    GtkTreeIter parent;
+
+    gtk_tree_model_iter_children(GTK_TREE_MODEL(_get_object("tasks_tree")),
+                                 &parent, NULL);
+
+    gtk_tree_model_iter_children(GTK_TREE_MODEL(_get_object("tasks_tree")),
+                                 &current_task_iter, &parent);
+}
+
+void _next_task() {
+    TaskLoader.save();
+
+    TaskLoader.complete();
+
+    if (next_task() < 0)
+
+    {
+
+        return;
+    }
+
+    GtkTreeIter sectioni;
+    GtkTreeModel *model = GTK_TREE_MODEL(_get_object("tasks_tree"));
+
+    char *section = NULL, *task = NULL;
+    gtk_tree_model_get(model, &current_task_iter, 0, &task, -1);
+    if (gtk_tree_model_iter_parent(model, &sectioni, &current_task_iter)) {
+        gtk_tree_model_get(model, &sectioni, 0, &section, -1);
+        g_print("[Widgets]Activated: %s/%s\n", section, task);
+
+        TaskPath path;
+        path.section = section;
+        path.name = task;
+        TaskLoader.open_task(path);
+        gtk_notebook_set_current_page(GTK_NOTEBOOK(_get_object("notebook")), 0);
+    }
+
+    g_free(task);
+    g_free(section);
+
+    TaskLoader.list();
+}
+
+int next_task() {
+
+    GtkTreeIter i;
+    /*
+        if (gtk_tree_model_iter_n_children(
+                GTK_TREE_MODEL(_get_object("tasks_tree")), NULL) != 0 &&
+                gtk_tree_model_iter_children(
+                    GTK_TREE_MODEL(_get_object("tasks_tree")), &i, NULL);) {
+        }
+
+    */
+    GtkTreeIter tmp = current_task_iter;
+    if (gtk_tree_model_iter_next(GTK_TREE_MODEL(_get_object("tasks_tree")),
+                                 &tmp)) {
+        current_task_iter = tmp;
+        return 1;
+    }
+    printf("End of Section\n");
+    GtkTreeIter parent = current_task_iter;
+
+    if (!gtk_tree_model_iter_parent(GTK_TREE_MODEL(_get_object("tasks_tree")),
+                                    &parent, &current_task_iter)) {
+        g_print("No parent exists?\n");
+        return -1;
+    }
+    printf("Parent exists\n");
+    if (!gtk_tree_model_iter_next(GTK_TREE_MODEL(_get_object("tasks_tree")),
+                                  &parent)) {
+        g_print("No next node exists\n");
+        return -1;
+    }
+    printf("Next node exists\n");
+    if (!gtk_tree_model_iter_children(GTK_TREE_MODEL(_get_object("tasks_tree")),
+                                      &current_task_iter, &parent)) {
+        g_print("Next node has no children\n");
+        return -1;
+    }
+    return 1;
 }
 
 // load and apply CSS

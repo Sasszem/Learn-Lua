@@ -136,7 +136,7 @@
                     <child>
                       <object class="GtkCellRendererToggle" id="done_render"/>
                       <attributes>
-                        <attribute name="activatable">1</attribute>
+                        <attribute name="active">1</attribute>
                       </attributes>
                     </child>
                   </object>
