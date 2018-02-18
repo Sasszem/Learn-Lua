@@ -17,7 +17,7 @@ void activate(GtkApplication *app, gpointer user_data) {
 
     TaskLoader.open_task(task);
     TaskLoader.list();
-    
+
     Widgets.postinit();
 
     g_print("[Main]Setup done\n");

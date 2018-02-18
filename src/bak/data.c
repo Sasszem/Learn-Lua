@@ -82,8 +82,6 @@ void _open_task(TaskPath task) {
 // Lists all the sections and tasks, filling the treeview rows
 void _fill_list() {
 
-
-
     char *sections_list; // holds the contents of the 'list' file in the
                          // sections root dir
 
@@ -104,7 +102,7 @@ void _fill_list() {
 
     GtkTreeIter section, task;
 
-    g_print("[Data]Begin listing...\n");
+    g_print("[Data][Listing]Begin listing...\n");
 
     for (char *p = strtok(sections_list, "\n"); p != NULL;
          p = strtok(NULL, "\n")) { // iterate over file contents line by line
@@ -118,12 +116,12 @@ void _fill_list() {
             g_build_filename(TASKPATH, p, LIST_FILE_NAME, NULL); // path
 
         char *save_path = g_build_filename(SAVEPATH, p, COMP_FILE_NAME, NULL);
-        g_print("\"completed\" file path: %s\n",save_path);
+
         gboolean save = g_file_get_contents(save_path, &completed, NULL, NULL);
 
         g_free(save_path);
         if (!save) {
-            g_print("[Data]No \"completed\" entry for %s\n", p);
+            g_print("[Data][Listing]No \"completed\" entry for %s\n", p);
         }
 
         // same
@@ -131,7 +129,7 @@ void _fill_list() {
             g_file_get_contents(tasks_list_path, &tasks_list, NULL, NULL);
         g_free(tasks_list_path);
         if (!success) {
-            g_print("[Data]Skipping section %s\n", p);
+            g_print("[Data][Listing]Skipping section %s\n", p);
             continue; // Section missing list file, skipping it
         }
 
@@ -150,12 +148,13 @@ void _fill_list() {
 
             gtk_tree_store_append(store, &task, &section); // new child node
             gtk_tree_store_set(store, &task, 0, l, -1);    // set its name
-            if (save){
-            char *a=g_strstr_len(completed, -1, l);
-            if (a!=NULL) {
-                g_print("Task %s is completed...\n",l);
-                gtk_tree_store_set(store, &task, 1, TRUE, -1);
-            }}
+            if (save) {
+                char *a = g_strstr_len(completed, -1, l);
+                if (a != NULL) {
+                    g_print("[Data][Listing]Task %s is completed...\n", l);
+                    gtk_tree_store_set(store, &task, 1, TRUE, -1);
+                }
+            }
         }
         // don't forget to save buffers
         g_free(tasks_list);
@@ -167,7 +166,7 @@ void _fill_list() {
     // Free buffers
     g_free(sections_list);
 
-    g_print("[Data]Listing done...\n");
+    g_print("[Data][Listing]Done!\n");
 }
 
 void _save_code() {
@@ -179,21 +178,20 @@ void _save_code() {
     text = gtk_text_buffer_get_text(
         GTK_TEXT_BUFFER(Widgets.get_object("program_buffer")), &start, &end, 0);
 
-
-
     char *dirpath = g_build_filename(SAVE_PATH, current.section, NULL);
     char *path = g_build_filename(dirpath, current.name, NULL);
-    g_print("[Data]File path: %s\n", path);
+    g_print("[Data][Saving]File path: %s\n", path);
     g_mkdir_with_parents(
         dirpath,
         510); // RWX permission for user and group, RW for all - octal 0776
     GError *err = NULL;
     if (!g_file_set_contents(path, text, -1, &err)) {
-        g_print("[Data]An error occured: \n   %s\n", err->message);
+        g_print("[Data][Saving]An error occured: \n   %s\n", err->message);
     }
     g_free(text);
     g_free(path);
     g_free(dirpath);
+    g_print("[Data][Saving]Done!\n");
 }
 // stub, do not use it yet...
 void _load_code() {
@@ -207,49 +205,36 @@ void _load_code() {
     }
 }
 
+void _complete_task() {
 
-void _complete_task()
-{
+    char *path =
+        g_build_filename(SAVEPATH, current.section, COMP_FILE_NAME, NULL);
 
+    char *contents;
 
-char *path = g_build_filename(SAVEPATH, current.section, COMP_FILE_NAME, NULL);
+    gboolean succ = g_file_get_contents(path, &contents, NULL, NULL);
 
-g_print("completed file path: %s\n",path);
-char *contents;
+    if (!succ) {
+        g_print("[Data][Completion]%s file does not exisit...\n",
+                COMP_FILE_NAME);
+        contents = "";
+    }
 
-gboolean succ= g_file_get_contents(path, &contents, NULL, NULL);
+    char *a = g_strstr_len(contents, -1, current.name);
+    if (a != NULL) {
+        return;
+    }
 
-if (!succ)
-{
-g_print(".completed file does not exisit...\n");
-contents="";
+    GError *err = NULL;
+
+    char *updated = g_strjoin("\n", contents, current.name, NULL);
+    if (!g_file_set_contents(path, updated, -1, &err)) {
+        g_print("[Data][Completion]File write error: %s\n", err->message);
+    }
+    g_free(updated);
+    g_free(path);
+    if (succ) {
+        g_free(contents);
+    }
+    g_print("[Data][Completion]%s file updated", COMP_FILE_NAME);
 }
-
-
-char *a=g_strstr_len(contents, -1, current.name);
-if (a!=NULL)
-{
-    return;
-}
-
-
-
-
-GError *err=NULL;
-
-g_print(".completed contents: \n%s",contents);
-g_print("current.name=%s\n",current.name);
-char *updated=g_strjoin("\n",contents,current.name,NULL);
-g_print("Updated string: %s\n",updated);
-if (!g_file_set_contents(path,updated,-1,&err))
-{
-    g_print("File write error: %s\n",err->message);
-}
-g_print("file written, freeing...\n");
-g_free(updated);
-g_free(path);
-if (succ)
-{g_free(contents);}
-g_print("freeing complete!\n");
-}
-

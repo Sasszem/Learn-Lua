@@ -8,12 +8,19 @@
 #include "lua.h"
 #include "tagger.h"
 
+#include <glib-object.h>
+
 // the builder
 static GtkBuilder *builder;
 
 static GtkCssProvider *provider;
 
 static GtkTreeIter current_task_iter;
+
+static GClosure *swtab[3];
+static int pages[3] = {0, 1, 2};
+
+static GtkAccelGroup *accgroup;
 
 int next_task();
 
@@ -124,6 +131,16 @@ void _signal_next() {
 //  FUNCTIONS START HERE
 //------------------------
 
+static void switch_tab(int tab) {
+    gtk_notebook_set_current_page(GTK_NOTEBOOK(_get_object("notebook")), tab);
+}
+
+static void tab0(gpointer d) { switch_tab(0); }
+
+static void tab1(gpointer d) { switch_tab(1); }
+
+static void tab2(gpointer d) { switch_tab(2); }
+
 // recursive function stolen from a demo
 // as I remember it was part of one of the demos in gtk-demo
 static void apply_css(GtkWidget *widget, GtkCssProvider *provider) {
@@ -139,6 +156,28 @@ static void setup_widgets() {
     builder = gtk_builder_new_from_file(GTK_GUI_FILE_NAME);
     gtk_application_add_window(
         app, GTK_WINDOW(gtk_builder_get_object(builder, "window")));
+
+    accgroup = gtk_accel_group_new();
+
+    gtk_window_add_accel_group(
+        GTK_WINDOW(gtk_builder_get_object(builder, "window")), accgroup);
+
+    swtab[0] = g_cclosure_new(G_CALLBACK(tab0), NULL, NULL);
+    swtab[1] = g_cclosure_new(G_CALLBACK(tab1), NULL, NULL);
+    swtab[2] = g_cclosure_new(G_CALLBACK(tab2), NULL, NULL);
+
+    GdkModifierType mod;
+    unsigned int key = 0;
+
+    gtk_accelerator_parse("F1", &key, &mod);
+    gtk_accel_group_connect(accgroup, key, mod, GTK_ACCEL_VISIBLE, swtab[0]);
+
+    gtk_accelerator_parse("F2", &key, &mod);
+    gtk_accel_group_connect(accgroup, key, mod, GTK_ACCEL_VISIBLE, swtab[1]);
+
+    gtk_accelerator_parse("F3", &key, &mod);
+    gtk_accel_group_connect(accgroup, key, mod, GTK_ACCEL_VISIBLE, swtab[2]);
+
     gtk_window_maximize(GTK_WINDOW(gtk_builder_get_object(builder, "window")));
     //    connect_signal("run_btn", "clicked", btn_run);
     _connect_signal("run_btn", "clicked", btn_run);
@@ -194,7 +233,8 @@ void _next_task() {
 
     g_free(task);
     g_free(section);
-
+    gtk_text_buffer_set_text(GTK_TEXT_BUFFER(_get_object("program_buffer")), "",
+                             -1);
     TaskLoader.list();
 }
 
@@ -215,24 +255,18 @@ int next_task() {
         current_task_iter = tmp;
         return 1;
     }
-    printf("End of Section\n");
     GtkTreeIter parent = current_task_iter;
 
     if (!gtk_tree_model_iter_parent(GTK_TREE_MODEL(_get_object("tasks_tree")),
                                     &parent, &current_task_iter)) {
-        g_print("No parent exists?\n");
         return -1;
     }
-    printf("Parent exists\n");
     if (!gtk_tree_model_iter_next(GTK_TREE_MODEL(_get_object("tasks_tree")),
                                   &parent)) {
-        g_print("No next node exists\n");
         return -1;
     }
-    printf("Next node exists\n");
     if (!gtk_tree_model_iter_children(GTK_TREE_MODEL(_get_object("tasks_tree")),
                                       &current_task_iter, &parent)) {
-        g_print("Next node has no children\n");
         return -1;
     }
     return 1;

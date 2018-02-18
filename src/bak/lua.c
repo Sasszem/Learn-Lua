@@ -81,11 +81,11 @@ void _run_task() {                          // run current tester code
     g_print("[Lua]Custom print() registated\n");
     lua_register(L, "run",
                  run_user_code); // register function to run the users code
-    if (run_task_code())             // run tester
-{
-    g_print("Tester returned True, advancing...\n");
-    Widgets.next();
-}
+    if (run_task_code())         // run tester
+    {
+        g_print("Tester returned True, advancing...\n");
+        Widgets.next();
+    }
     close_lua(); // cleanup
 }
 
@@ -166,6 +166,6 @@ static int run_code(char *code) {
         // show errors
         lua_pop(L, 1); /* pop error message from the stack */
     }
-    
-    return lua_toboolean(L,-1);
+
+    return lua_toboolean(L, -1);
 }
