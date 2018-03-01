@@ -1,0 +1,11 @@
+<span font="30" underline="single">Feltételek</span>
+<span font="24">
+
+
+<span font="30" underline="single">Feladat:</span>
+Írj programot, ami megadja, hogy a AX^2+BX+C=0 egyenlet megoldható-e a valós számok halmazán!
+
+<b>Tipp:</b>
+<a href="http://www.bethlen.hu/matek/Mathist/Forras/Masodfoku_egyenlet_diszkriminansa.htm">Diszkrimináns</a>
+
+</span>

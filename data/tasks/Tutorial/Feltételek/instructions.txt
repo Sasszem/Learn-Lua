@@ -1,0 +1,23 @@
+<span font="30" underline="single">Feltételek</span>
+<span font="24">
+A legtöbb program végez döntéseket a bemenő adatok alapján.
+A döntések különfélék lehetnek, és különböző feltétel szerint dönthetnek.
+
+
+A legtöbb feltétel <a href="https://www.lua.org/pil/3.2.html">összehasonlítás</a>:
+ - Egyenlőség: BE==2   Vigyázzunk hogy két egyenlőségjel van!
+ - Kisebb, nagyobb: BE&lt;2 vagy BE&gt;2
+ - Kisebb-egyenlő, nagyobb-egyenlő: BE&lt;=2 vagy BE&gt;=2
+ - Nem egyenlő: BE~=2
+
+Ezen kifejezések értéke bemenettől függően igaz(true) vagy hamis(false).
+Ez egy újabb típus, a logikai(boolean) típus.
+A programunk kimenete is lehet logikai érték
+
+<span font="30" underline="single">Feladat:</span>
+Írj programot, ami megadja, hogy a AX^2+BX+C=0 egyenlet megoldható-e a valós számok halmazán!
+
+<b>Tipp:</b>
+<a href="http://www.bethlen.hu/matek/Mathist/Forras/Masodfoku_egyenlet_diszkriminansa.htm">Diszkrimináns</a>
+
+</span>

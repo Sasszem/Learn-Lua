@@ -63,11 +63,10 @@ static void init_lua() { // Sets up a new sandbox
     g_print("[Lua]Initializing LUA\n");
     L = luaL_newstate();
 
-    luaopen_base(L); /* opens the basic library */
-    luaopen_table(L);
+    luaL_openlibs(L);
 
-    luaopen_string(L); /* opens the string lib. */
-    luaopen_math(L);
+    luaL_dostring(L,"corutine=nil\nio=nil\nos=nil\ndebug=nil");
+
 }
 
 static void close_lua() {

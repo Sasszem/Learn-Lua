@@ -1,0 +1,33 @@
+<span font="30" underline="single">Számok, számok...</span>
+<span font="24">
+Az egyik előző példában megtanultál számokat kiírni
+Nézzük csak, mit csinálhatunk még számokkal!
+
+<span underline="single" weight="bold">Tizedestörtek</span>
+<span underline="single">A Lua-ban a tizedestörteket ponttal jelöljük</span>
+
+
+<span underline="single" weight="bold">Matematikai alapműveletek:</span>
+ - Összeadás: 5+3 = 7
+ - Kivonás: 5-3 = 2
+ - Szorzás: 5*3 = 15
+ - Osztás: 5/3 = 1.6666666666667
+ - Hatványozás: 5^2 = 25.0
+ - Egész osztás: 5//3 = 1
+ - Maradékképzés: 5%3 = 2
+
+Ezek közül csak az egész osztás és a maradékképzés nem egyértelmű
+
+Az egész osztás lényege, hogy az eredménye egész szám. Tehát <span weight="bold">5//3=1</span>,
+mivel ötben a három egyszer van meg, és marad kettő.
+Az osztási maradékot pedig a maradékképzéssel kapjuk meg: <span weight="bold">5%3=2</span>
+Tehát <span weight="bold">a=b*(a//b)+a%c</span>
+
+<span underline="single" weight="bold">Zárójelek és a műveletek sorrendje</span>
+A Lua matemaikai kifejezésekben a zárójeleket szabályosan kezeli, és a műveletek sorrendjét is betartja
+<span weight="bold">5*3+2=(5*3)+2=15+2=17</span>
+
+<span font="30" underline="single">Feladat:</span>
+Írj programot, ami visszaadja a <b>SZAM</b> bemenet kétszeresét, felét, négyzetét és hárommal való osztási maradékát!
+
+</span>

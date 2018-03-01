@@ -1,0 +1,15 @@
+<span font="30" underline="single">Hello World!</span>
+<span font="24">
+Tradícionálisan az első példaprogram egy programozásról szóló könyvben a 
+<span style="italic" underline="single">Hello World!</span>. Ez a program semmi mást nem csinál, mint kiírja,
+hogy "Hello World!". A mi első programunk is ez lesz.
+
+A program maga egyetlen sorból áll:
+   <span bgcolor="#001844" color="white"><span color="#149292">print</span>(<span color="#75CC2B">"Hello World!"</span>) 
+</span>
+
+Másold a programot a második oldalra, majd futtasd a menüből a zöld nyíllal, 
+vagy a <span weight="bold">Ctrl-R</span> billentyűkombinációval!
+Pontosan másolj!
+
+</span>

@@ -1,0 +1,43 @@
+<span font="30" underline="single">Kimenet és bemenet</span>
+<span font="24">
+Minden program fontos eleme a kimenet és a bemenet. 
+A bemeneten keresztül jut adatokhoz, melyeket feldolgoz,
+és az eredményt a kimenetre írja.
+
+<span underline="single" weight="bold">Parancssor</span>
+Minden Lua környezet beépített része a <a href="https://www.lua.org/manual/5.1/manual.html#pdf-print">print</a> utasítás és az <a href="https://www.lua.org/pil/21.1.html">io</a> modul,
+melyekkel a parancssorból lehet bemenetet olvasni és kimenetet írni.
+A print utasítással már megismerkedtél, az io modult pedig ez az 
+oktatóprogram nem fogja használni, és nem is tartalmazza.
+
+A további feladatok során a <span weight="bold">print</span> utasítást nem kell használnod,
+de segíthet a hibakeresésben
+
+<span underline="single" weight="bold">Az oktatóprogramról</span>
+Mivel az oktatóprogram úgy teszteli a programodat, hogy különböző
+bemenetekkel lefuttattja, és ellenőrzi a kimeneteit, így itt is
+feltétlen szükséges ki- és bemenetkezelés.
+
+A program bemeneteit elnevezve, <span style="italic">változókban</span> kapod meg
+(a változókra a későbbiekben részletesebben is kitérünk),
+például "BE1", "BE2", stb. 
+A program bemeneteitnek eléréséhet egyszerűen írd a nevüket:
+   <span bgcolor="#001844" color="white"><span color="#149292">print</span>(NEV)</span>
+
+
+A bemeneteket mindig úgy nevezem el, hogy egyértelmű legyen a tartalmuk
+(például "NEV", "ELETKOR"), és csakis csupa nagybetűből, esetleg számokból álljanak.
+Ékezetet nem tartalmaznak
+
+A program kimenetét a <span weight="bold">return</span> utasítással adhatod meg:
+   <span bgcolor="#001844" color="white"><span color="#0079BD">return</span> 42</span>
+
+<span weight="bold">Egy programnak ilyenformán csakis egy kimenete lehet, a program a return utasításig fut!</span>
+Ha mégis több bemenetet kell megadnod, azokat a <b>return</b> utasítás után vesszővel elválasztva add meg:
+   <span bgcolor="#001844" color="white"><span color="#0079BD">return</span> 42, 43, 44, "45"</span>
+
+<span font="30" underline="single">Feladat:</span>
+Írj programot, aminek a kimenete pontosan a <span weight="bold">BE</span> bemenete!
+
+
+</span>
