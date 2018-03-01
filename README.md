@@ -6,7 +6,7 @@ A program a Lua nyelv alapjait tanítja meg a felhasználónak feladatokon keres
 Minden feladat egy újabb programelem használatát és működését tanítja meg, például a változókat vagy az eljárásokat. 
 
 ### Működés
-A felhasználónak újonnan tanult elem után írnia kell egy programot, ami az adott elemre épül. A felhasználó programját egy automate tesztelőprogram különböző bemenetekkel futtatja, és ha sikeresen megoldotta a feladatok, tovbblépteti a következő feladatra.
+A felhasználónak újonnan tanult elem után írnia kell egy programot, ami az adott elemre épül. A felhasználó programját egy automata tesztelőprogram különböző bemenetekkel futtatja, és ha sikeresen megoldotta a feladatok, tovbblépteti a következő feladatra.
 
 ### Felület
 A program a GTK+ 3.0 könyvtárra épülő, könnyen kezelhető felületet biztosít. 
@@ -32,7 +32,7 @@ A mentés helye a `/src/data.h` file-ban van meghatározva
 
 ### Lua környezet
 A Lua környezet a Lua 5.2-es verziójára épül.
-A környetet részben módosítva van, több modul le van tiltva, és néhány eljárás felül van írva, például a `print`, amely felugró ablakot jelenít meg a parancssorba való írás helyett.
+A környezet részben módosítva van, több modul le van tiltva, és néhány eljárás felül van írva, például a `print`, amely felugró ablakot jelenít meg a parancssorba való írás helyett.
 
 A felhasználó a programjának bemeneteit elnevezve, változókban kapja meg pl. `ELETKOR`, `BEMENET`, stb. A programjának kimenetét a `return` kulcsszóval adja meg, pl. `return 42`
 
@@ -44,7 +44,7 @@ Az értékelő többször is futtathatja a felhasználó programját, többféle
 Az értékelő szintén a `return` utasítással adja vissza kimenetét, amely logikai(boolean) érték, helyes felhasználói program esetén `true`
 
 ### Adatbetöltés
-A program az adatokat dinamikusan tölti be, az adatok helye a `/src/data.h` file-ban van meghatározva. A betöltendő adatok témakörökre, azon belül pedig feladatokra vannak osztva. A betöltés gyökérköyvtárában és az egyes témakörök könytárában is szerepel egy listafájl, ami soronként tartalmazza a témakörök nevét, illetve az adott témakör feladatait, melyeket az azonos nevű mappában keres a program. Minen feladat mappájában két file kell hogy legyen, az `instructions.txt` és a `tester.lua`. Előbbi tartalmazza az adott feladat leírását, utasításait, utóbbi pedig a tesztelőprogram.
+A program az adatokat dinamikusan tölti be, az adatok helye a `/src/data.h` file-ban van meghatározva. A betöltendő adatok témakörökre, azon belül pedig feladatokra vannak osztva. A betöltés gyökérköyvtárában és az egyes témakörök könytárában is szerepel egy listafájl, ami soronként tartalmazza a témakörök nevét, illetve az adott témakör feladatait, melyeket az azonos nevű mappában keres a program. Minden feladat mappájában két file kell hogy legyen, az `instructions.txt` és a `tester.lua`. Előbbi tartalmazza az adott feladat leírását, utasításait, utóbbi pedig a tesztelőprogram.
 A leírás __pango makrup__ elemeket tartalmazhat.
 
 ### Fejlesztési állapot
