@@ -20,12 +20,15 @@ A kezelőfelület három oldalra van osztva:
 
 
 <span underline="single">Megjegyzés:</span>
+A Lua az ékezetes karaktereket(á,é,í,ő,ű,stb.) nem ismeri, tehát ebben a programban ne is használd őket!
 A harmadik oldalon még meg nem oldott feladatokat is kiválaszthatsz, de érdemes sorban haladni.
 
 Az egyes oldalak között gyorsan válthatsz az <span weight="bold">F1-F3</span> gombokkal
 
 A továbblépéshez nyomd meg a menüsávban a zöld ikont(program futtatása), 
 vagy a <span weight="bold">Ctrl-R</span> billentyűkombinációt!
+
+
 
 
 Kellemes időtöltést!

@@ -21,11 +21,6 @@ build: $(foreach f, $(FILES),./src/$(f).c)
 	@make obj
 	@make link
 
-commit:
-	@make cleanup
-	@git add .
-	@git commit
-	@git push
 
 obj: 
 	$(foreach f, $(FILES), $(CC) -o ./build/$(f).o ./src/$(f).c $(CFLAGS) -c;)
