@@ -1,17 +1,18 @@
 <span font="30" underline="single">Üdvözöllek</span>
 <span font="24">a Learn-Lua oktatóprogramban!
 
-Ez a program egy interaktív tanulóprogram, amelyből megtanulhatod a programozás alapjait
-a Lua programozási nyelvben.
+Ez a program egy interaktív tanulóprogram, amelyből megtanulhatod a
+programozás alapjait a Lua programozási nyelvben.
 
-A Lua egy magas szintű programozási nyelv, amelyet könnyű tanulhatósága miatt választottam
-mint tanulandó nyelvet.
+A Lua egy magas szintű programozási nyelv, amelyet könnyű tanulhatósága
+ miatt választottam mint tanulandó nyelvet.
 
 <a href="https://www.lua.org/">A Lua hivatalos honlapja</a>
 
 
-A Learn-Lua program interaktív módon, feladatmegoldáson keresztül fogja megismertetni veled
-a Lua nyelvet. Ha egy feladatot megoldottál, továbblépsz a következőre. 
+A Learn-Lua program interaktív módon, feladatmegoldáson keresztül fogja 
+megismertetni veled a Lua nyelvet. Ha egy feladatot megoldottál,
+továbblépsz a következőre. 
 
 A kezelőfelület három oldalra van osztva:
  - Az első, amelyet most olvasol, fogja tartalmazni az egyes feladatok leírását
@@ -20,8 +21,8 @@ A kezelőfelület három oldalra van osztva:
 
 
 <span underline="single">Megjegyzés:</span>
-A Lua az ékezetes karaktereket(á,é,í,ő,ű,stb.) nem ismeri, tehát ebben a programban ne is használd őket!
-A harmadik oldalon még meg nem oldott feladatokat is kiválaszthatsz, de érdemes sorban haladni.
+A harmadik oldalon még meg nem oldott feladatokat is kiválaszthatsz, de
+érdemes sorban haladni.
 
 Az egyes oldalak között gyorsan válthatsz az <span weight="bold">F1-F3</span> gombokkal
 

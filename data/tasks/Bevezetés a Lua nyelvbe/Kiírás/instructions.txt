@@ -6,20 +6,23 @@ Nézzük csak meg hogyan is működik:
    <span bgcolor="#001844" color="white"><span color="#149292">print</span>(<span color="#75CC2B">"Hello World!"</span>) 
 </span>
 
-A <a href="https://www.lua.org/manual/5.1/manual.html#pdf-print">print</a> <span style="italic">eljárás</span> a Lua egyik beépített utasítása, ami szöveget jelenít meg a képernyőn.
-Alapesetben a szöveg a parancssorban jelenik meg, de az oktatóprogramban a könnyebb kezelhetőség kedvéért
-egy felugró ablakot jelenít meg. 
+A <a href="https://www.lua.org/manual/5.1/manual.html#pdf-print">print</a> <span style="italic">eljárás</span> a Lua egyik beépített utasítása, ami szöveget jelenít meg
+a képernyőn.
+Alapesetben a szöveg a parancssorban jelenik meg, de az oktatóprogramban
+a könnyebb kezelhetőség kedvéért egy felugró ablakot jelenít meg. 
 
 Minden eljárásnak(utasításnak) lehetnek <span style="italic">paraméterei</span>, azaz bemenetei,
 például hogy mi legyen a szöveg amit kiírunk. 
 
-A paraméter típusa többféle is lehet. A <a href="https://www.lua.org/manual/5.1/manual.html#pdf-print">print</a> eljárás például kiírhat szövegeket vagy számokat is.
+A paraméter típusa többféle is lehet. A <a href="https://www.lua.org/manual/5.1/manual.html#pdf-print">print</a> eljárás például kiírhat
+szövegeket vagy számokat is.
 A
    <span bgcolor="#001844" color="white"><span color="#149292">print</span>(42)</span>
 program például 42-t írna ki, amit számként adtunk meg.
 
 A kettő legfontosabb típus a Lua-ban a szöveg és a szám. 
-Ha szövegeket akarunk megadni Lua-ban, akkor azt idézőjelek közé kell tenni, mint az előző példában.
+Ha szövegeket akarunk megadni Lua-ban, akkor azt idézőjelek közé
+kell tenni, mint az előző példában.
 Számok megadásánál elég simán megadni a számot.
 
 

@@ -15,7 +15,8 @@ Ez egy újabb típus, a logikai(boolean) típus.
 A programunk kimenete is lehet logikai érték
 
 <span font="30" underline="single">Feladat:</span>
-Írj programot, ami megadja, hogy a AX^2+BX+C=0 egyenlet megoldható-e a valós számok halmazán!
+Írj programot, ami megadja, hogy a AX^2+BX+C=0 egyenlet megoldható-e
+a valós számok halmazán!
 
 <b>Tipp:</b>
 <a href="http://www.bethlen.hu/matek/Mathist/Forras/Masodfoku_egyenlet_diszkriminansa.htm">Diszkrimináns</a>

@@ -57,6 +57,7 @@
                         <property name="halign">start</property>
                         <property name="valign">start</property>
                         <property name="wrap">True</property>
+                        <property name="wrap_mode">word-char</property>
                         <property name="ellipsize">end</property>
                       </object>
                     </child>
@@ -69,6 +70,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Utasítások</property>
+                <property name="wrap">True</property>
                 <style>
                   <class name="tab_label"/>
                 </style>

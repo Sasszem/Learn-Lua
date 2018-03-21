@@ -8,7 +8,7 @@ Nézzük csak, mit csinálhatunk még számokkal!
 
 
 <span underline="single" weight="bold">Matematikai alapműveletek:</span>
- - Összeadás: 5+3 = 7
+ - Összeadás: 5+3 = 8
  - Kivonás: 5-3 = 2
  - Szorzás: 5*3 = 15
  - Osztás: 5/3 = 1.6666666666667
@@ -24,10 +24,12 @@ Az osztási maradékot pedig a maradékképzéssel kapjuk meg: <span weight="bol
 Tehát <span weight="bold">a=b*(a//b)+a%c</span>
 
 <span underline="single" weight="bold">Zárójelek és a műveletek sorrendje</span>
-A Lua matemaikai kifejezésekben a zárójeleket szabályosan kezeli, és a műveletek sorrendjét is betartja
+A Lua matemaikai kifejezésekben a zárójeleket szabályosan kezeli, 
+és a műveletek sorrendjét is betartja
 <span weight="bold">5*3+2=(5*3)+2=15+2=17</span>
 
 <span font="30" underline="single">Feladat:</span>
-Írj programot, ami visszaadja a <b>SZAM</b> bemenet kétszeresét, felét, négyzetét és hárommal való osztási maradékát!
+Írj programot, ami visszaadja a <b>SZAM</b> bemenet kétszeresét, felét,
+négyzetét és hárommal való osztási maradékát!
 
 </span>

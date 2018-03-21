@@ -26,14 +26,17 @@ A program bemeneteitnek eléréséhet egyszerűen írd a nevüket:
 
 
 A bemeneteket mindig úgy nevezem el, hogy egyértelmű legyen a tartalmuk
-(például "NEV", "ELETKOR"), és csakis csupa nagybetűből, esetleg számokból álljanak.
+(például "NEV", "ELETKOR"), és csakis csupa nagybetűből, esetleg
+számokból álljanak.
 Ékezetet nem tartalmaznak
 
 A program kimenetét a <span weight="bold">return</span> utasítással adhatod meg:
    <span bgcolor="#001844" color="white"><span color="#0079BD">return</span> 42</span>
 
-<span weight="bold">Egy programnak ilyenformán csakis egy kimenete lehet, a program a return utasításig fut!</span>
-Ha mégis több bemenetet kell megadnod, azokat a <b>return</b> utasítás után vesszővel elválasztva add meg:
+<span weight="bold">Egy programnak ilyenformán csakis egy kimenete lehet,
+a program a return utasításig fut!</span>
+Ha mégis több bemenetet kell megadnod, azokat a <b>return</b> utasítás után 
+vesszővel elválasztva add meg:
    <span bgcolor="#001844" color="white"><span color="#0079BD">return</span> 42, 43, 44, "45"</span>
 
 <span font="30" underline="single">Feladat:</span>
